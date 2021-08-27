@@ -25,9 +25,11 @@ class GRAPHW00F:
     '''
     response = self.graph_query(url, payload=query)
     try:  
-      if response.get('data', {}).get('__typename') in ('Query', 'QueryRoot'):
+      if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
         return True
-      if response.get('errors') and any('locations' in i for i in response['errors']):
+      elif response.get('errors') and any('locations' in i for i in response['errors']):
+        return True
+      elif response.get('data'):
         return True
       else: 
         raise GraphQLNotFound
@@ -104,6 +106,15 @@ class GRAPHW00F:
    
   def engine_hasura(self):
     query = '''
+      query @cached {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if response.get('data', {}).get('__typename') == 'query_root':
+      return True
+    
+    query = '''
       query { 
         __schema 
       }
@@ -122,6 +133,15 @@ class GRAPHW00F:
     if error_contains(response, 'field "aaa" not found in type: \'query_root\''):
       return True
     
+   query = '''
+      query @skip {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'directive "skip" is not allowed on a query'):
+      return True
+
     return False
     
   def engine_graphqlphp(self):
@@ -171,6 +191,24 @@ class GRAPHW00F:
     return False
     
   def engine_hypergraphql(self):
+    query = '''
+     query @skip { 
+        __typename 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Validation error of type MisplacedDirective: Directive skip not allowed here'):
+      return True
+    
+    query = '''
+     zzz { 
+        __typename 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Validation error of type InvalidSyntax: Invalid query syntax.'):
+      return True
+
     query = '''
      query aaa@aaa { 
         __typename 
