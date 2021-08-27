@@ -9,12 +9,10 @@ class GraphQLError(Exception):
 class GRAPHW00F:
   def __init__(self, headers,
                      cookies,
-                     input_file=None, 
                      follow_redirects=False):
     self.url = 'http://example.com'
     self.cookies = cookies
     self.headers = headers
-    self.input_file = input_file
     self.follow_redirects = follow_redirects
   
   def check(self, url):
@@ -61,6 +59,7 @@ class GRAPHW00F:
       response = requests.post(url, 
                              headers=self.headers,
                              cookies=self.cookies,
+                             allow_redirects=self.follow_redirects,
                              json={operation:payload})
       return response.json()
     except GraphQLError:

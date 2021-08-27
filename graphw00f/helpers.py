@@ -1,7 +1,11 @@
 
+import datetime
 from urllib.parse import urlparse
 
 VERSION = '1.0.0'
+
+def get_time():
+  return datetime.datetime.now().strftime('%Y-%m-%d')
 
 def draw_art():
   return '''
