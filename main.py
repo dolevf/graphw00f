@@ -13,7 +13,7 @@ from graphw00f.lib import GRAPHW00F
 
 
 def main():
-    parser = OptionParser(usage='%prog url\r\nexample: %prog -t http://www.site.org/graphql')
+    parser = OptionParser(usage='%prog -t http://example.com/graphql')
     parser.add_option('-r', '--noredirect', action='store_false', dest='followredirect', default=True, 
                      
                             help='Do not follow redirections given by 3xx responses')
@@ -41,7 +41,7 @@ def main():
       sys.exit(0)
 
     if not options.url:
-      parser.error('you must pass at least 1 url.')
+      parser.print_help()
       sys.exit(1)
     
     url = options.url
