@@ -4,6 +4,7 @@ import sys
 import conf
 import graphw00f.helpers
 
+from time import sleep
 from urllib.parse import urlparse
 from optparse import OptionParser
 
@@ -37,11 +38,19 @@ def main():
       sys.exit(1)
     
 
+
     url = args[0]
     url_path = urlparse(url).path
     url_scheme = urlparse(url).scheme
     url_netloc = urlparse(url).netloc
+    
+    g = GRAPHW00F(input_file=options.input,
+                  follow_redirects=options.followredirect,
+                  headers=conf.HEADERS, 
+                  cookies=conf.COOKIES)
 
+    print(graphw00f.helpers.draw_art())
+    
     if url_scheme not in ('http', 'https'):
       print('URL is missing a scheme (http|https)')
       sys.exit(1)
@@ -51,18 +60,17 @@ def main():
       sys.exit(1)
 
     if not url_path:
-      print('No URL Path was provided, are you sure you want to scan for graphql without a path?...')
-      
-    g = GRAPHW00F(input_file=options.input,
-                  follow_redirects=options.followredirect,
-                  headers=conf.HEADERS, 
-                  cookies=conf.COOKIES)
-    
+      print('[*] No URL Path was provided, are you sure you want to scan for graphql without a path?...')
+      print('[*[ Continue anyway? [y/n]')
+      choice = input().lower()
+      if not graphw00f.helpers.user_confirmed(choice):
+        sys.exit(1)
+
     print('[*] Checking if GraphQL is available at {url}...'.format(url=url))
+    sleep(1)
     if not g.check(url):
-      print('[x] {url} did not seem to provide a standard GraphQL response, indicating it may not exist.')
-      print('[x] graphw00f may fail, continue? [y/n]')
-      choice = raw_input().lower()
+      print('[*] Continue anyway? [y/n]'.format(url=url))
+      choice = input().lower()
       if graphw00f.helpers.user_confirmed(choice):
         g.execute(url)
       else:
@@ -71,17 +79,15 @@ def main():
     else:
       print('[*] Running...')
       result = g.execute(url)
-
       if result:
         name = graphw00f.helpers.get_engines()[result]['name']
         url = graphw00f.helpers.get_engines()[result]['url']
         language = ', '.join(graphw00f.helpers.get_engines()[result]['language'])
         print('[*] Discovered GraphQL Engine!')
-        print('\t[!] The site {} is behind {}'.format(url, name))
-        print('\t[!] Language: {}'.format(language))
-        print('\t[!] Homepage: {}'.format(url))
+        print('[!] The site {} is behind {}'.format(url, name))
+        print('[!] Language: {}'.format(language))
+        print('[!] Homepage: {}'.format(url))
   
-
 if __name__ == '__main__':
     main()
     

@@ -1,5 +1,11 @@
 import requests
 
+class GraphQLNotFound(Exception):
+  pass
+
+class GraphQLError(Exception):
+  pass
+
 class GRAPHW00F:
   def __init__(self, headers,
                      cookies,
@@ -18,9 +24,14 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(url, payload=query)
-    
-    if response.get('data', {}).get('__typename') == 'Query':
-      return True
+    try:  
+      if response.get('data', {}).get('__typename') == 'Query':
+        print('[*] Found GraphQL.')
+        return True
+      else: 
+        raise GraphQLNotFound
+    except GraphQLNotFound:
+      print('[x] Could not determine existence of GraphQL (GraphQLNotFound)')
     return False
 
   def execute(self, url):    
@@ -46,24 +57,22 @@ class GRAPHW00F:
     return None
   
   def graph_query(self, url, operation='query', payload={}):
-    response = requests.post(url, 
+    try:
+      response = requests.post(url, 
                              headers=self.headers,
                              cookies=self.cookies,
                              json={operation:payload})
-    try:
       return response.json()
-    except Exception as err:
-      print('Could not query GraphQL at {url}'.format(url=url))
-      print('Error: {err}'.format(err=err))
+    except GraphQLError:
       return {}
-
+    except:
+      return {}
   def engine_apollo(self):
     preferred_urls = []
     query = '''
       aa
     '''
     response = self.graph_query(self.url, operation='aa', payload=query)
-
     if response.get('errors'):
       for i in response['errors']:
         if i.get('message') == 'GraphQL operations must contain a non-empty `query` or a `persistedQuery` extension.':

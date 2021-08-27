@@ -1,6 +1,36 @@
 
 from urllib.parse import urlparse
 
+VERSION = '1.0.0'
+
+def draw_art():
+  return '''
++-------------------+           +--------------------+
+|      GRAPHQL      |           |     FINGERPRINT    |
++-------------------+           +--------------------+
+                  **              **                  
+                    ***        ***                    
+                       **    **                       
+                +-------------------+                 
+                |     graphw00f     |                 
+                +-------------------+                 
+                  ***            ***                  
+                **                  ***               
+              **                       **             
+    +--------------+                     **           
+    |    Node A    |                   **             
+    +--------------+                ***               
+                  ***            ***                  
+                     **        **                     
+                       **    **                       
+                    +------------+                      
+                    |   Node X   |                      
+                    +------------+    
+
+                graphw00f - v{version}
+          The fingerprinting tool for GraphQL
+  '''.format(version=VERSION)
+
 def get_engines():
   return {
     'apollo':{
