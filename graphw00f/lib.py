@@ -133,7 +133,7 @@ class GRAPHW00F:
     if error_contains(response, 'field "aaa" not found in type: \'query_root\''):
       return True
     
-   query = '''
+    query = '''
       query @skip {
         __typename
       }
@@ -166,6 +166,26 @@ class GRAPHW00F:
     return False
         
   def engine_ruby(self):
+    query = '''
+     query @skip {
+       __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, '\'@skip\' can\'t be applied to queries (allowed: fields, fragment spreads, inline fragments)'):
+      return True
+    elif error_contains(response, 'Directive \'skip\' is missing required arguments: if'):
+      return True
+    
+    query = '''
+     query @deprecated {
+       __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, '\'@deprecated\' can\'t be applied to queries'):
+      return True
+
     query = '''
      query aa@aa {
        __schema {
