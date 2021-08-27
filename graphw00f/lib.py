@@ -1,5 +1,7 @@
 import requests
 
+from graphw00f.helpers import error_contains
+
 class GraphQLNotFound(Exception):
   pass
 
@@ -17,14 +19,15 @@ class GRAPHW00F:
   
   def check(self, url):
     query = '''
-      {
+      query {
         __typename
       }
     '''
     response = self.graph_query(url, payload=query)
     try:  
-      if response.get('data', {}).get('__typename') == 'Query':
-        print('[*] Found GraphQL.')
+      if response.get('data', {}).get('__typename') in ('Query', 'QueryRoot'):
+        return True
+      if response.get('errors') and any('locations' in i for i in response['errors']):
         return True
       else: 
         raise GraphQLNotFound
@@ -42,8 +45,6 @@ class GRAPHW00F:
       return 'apollo'
     elif self.engine_hasura():
       return 'hasura'
-    elif self.engine_graphqlphp():
-      return 'graphql-php'
     elif self.engine_wpgraphql():
       return 'wpgraphql'
     elif self.engine_graphqlapiforwp():
@@ -52,6 +53,8 @@ class GRAPHW00F:
       return 'hypergraphql'
     elif self.engine_ruby():
       return 'ruby-graphql'
+    elif self.engine_graphqlphp():
+      return 'graphql-php'
     return None
   
   def graph_query(self, url, operation='query', payload={}):
@@ -66,97 +69,85 @@ class GRAPHW00F:
       return {}
     except:
       return {}
+
   def engine_apollo(self):
-    preferred_urls = []
-    query = '''
-      aa
+    query = ''' 
+      query @skip {
+        __typename
+      }
     '''
-    response = self.graph_query(self.url, operation='aa', payload=query)
-    if response.get('errors'):
-      for i in response['errors']:
-        if i.get('message') == 'GraphQL operations must contain a non-empty `query` or a `persistedQuery` extension.':
-          return True
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Directive "@skip" argument "if" of type "Boolean!" is required, but it was not provided.'):
+      return True
+
+    query = ''' 
+      query @deprecated {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Directive "@deprecated" may not be used on QUERY.'):
+      return True
   
   def engine_graphene(self):
-    preferred_urls = []
-
-    query = '''
-      { __schema }
-    '''
+    query = ''
     response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        if i.get('message', '') == 'Field "__schema" of type "__Schema!" must have a sub selection.':
-          return True
-
+    if error_contains(response, 'Must provide query string.'):
+      return True
+      
     query = '''aaa'''
     response = self.graph_query(self.url, payload=query)
-    
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Syntax Error GraphQL (1:1)' in err_message:
-          return True
+    if error_contains(response, 'Syntax Error GraphQL (1:1)'):
+      return True
 
     return False
    
   def engine_hasura(self):
-    preferred_urls = []
     query = '''
-      { __schema }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'missing selection set for "__Schema"' in err_message:
-          return True
-
-    query = '''
-      { aa }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message')
-        if err_message and 'field "aaa" not found in type: \'query_root\'' in err_message:
-          return True
-  
-  def engine_graphqlphp(self):
-    preferred_urls = []
-    query = '''
-      { __schema }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Field "__schema" of type "__Schema!" must have a sub selection.' in err_message:
-          return True
-    
-    query = '''
-      { 
-        subscription  {
-          s
-        }
+      query { 
+        __schema 
       }
     '''
     response = self.graph_query(self.url, payload=query)
 
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Schema is not configured for subscriptions.' in err_message:
-          return True
+    if error_contains(response, 'missing selection set for "__Schema"'):
+      return True
+
+    query = '''
+     query { 
+       aa 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'field "aaa" not found in type: \'query_root\''):
+      return True
+    
+    return False
+    
+  def engine_graphqlphp(self):
+    query = ''' 
+      query @skip {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Directive "@skip" argument "if" of type "Boolean!" is required but not provided.'):
+      return True
+    
+    query = '''
+      subscription {
+        s 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Schema is not configured for subscriptions.'):
+      return True
+    
+    return False
         
   def engine_ruby(self):
-    preferred_urls = []
     query = '''
-      aa@aa {
+     query aa@aa {
        __schema {
            directives {
              description
@@ -165,121 +156,124 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if err_message == 'Directive @aa is not defined':
-          return True
-  
+    if error_contains(response, 'Directive @aa is not defined'):
+      return True
+    
     query = '''
-      { __schema }
+      query { 
+        __schema 
+      }
     '''
     response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Field must have selections (field \'__schema\' returns __Schema but has no selections.' in err_message:
-          return True
+    if error_contains(response, 'Field must have selections (field \'__schema\' returns __Schema but has no selections.'):
+      return True
+    
+    return False
     
   def engine_hypergraphql(self):
-    preferred_urls = []
     query = '''
-      aaa@aaa { 
+     query aaa@aaa { 
         __typename 
       }
     '''
     response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Validation error of type UnknownDirective: Unknown directive aaa' in err_message:
-          return True
-        
-        validation_err_type = i.get('validationErrorType', '')
-        if validation_err_type == 'UnknownDirective':
-          return True
-  
-  def engine_ariadne(self):
-    preferred_urls = []
-    query = '''
-      { __schema }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Field \'__schema\' of type \'__Schema!\' must have a selection of subfields.' in err_message:
-          return True
-    
-    query = '''
-      { 
-        subscription {
-          s
-        }
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Could not connect to websocket endpoint' in err_message:
-          return True
+    if error_contains(response, 'Validation error of type UnknownDirective: Unknown directive aaa'):
+      return True
     
     return False
   
+  def engine_ariadne(self):
+    query = '''
+      query { 
+        __schema 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Field \'__schema\' of type \'__Schema!\' must have a selection of subfields.'):
+      return True
+    
+    query = '''
+      subscription {
+        s
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Could not connect to websocket endpoint'):
+      return True
+    
+    query = ''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'The query must be a string.'):
+      return True
+        
+    return False
+  
   def engine_graphqlapiforwp(self):
-    preferred_urls = []
-    query = ''' {
+    query = ''' 
+     query {
        alias1$1:__schema
      }
     '''
     response = self.graph_query(self.url, payload=query)
-
     try:
-      if response['data']['alias1$1'] == '__schema':
+      if response['data']['alias1$1'] == 'schema':
         return True
     except KeyError:
       pass
 
-    query = ''' {
-       query aa#aa { __typename }
-     }
+    query = '''query aa#aa { __typename }'''
+    response = self.graph_query(self.url, payload=query)
+    
+    if error_contains(response, 'Unexpected token "END"'):
+      return True
+    
+    query = ''' 
+      query @skip {
+        __typename
+      }
     '''
     response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Argument \'if\' cannot be empty, so directive \'skip\' has been ignored'):
+      return True
 
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Unexpected token "END"' in err_message:
-          return True
-    
-    
+    query = ''' 
+      query @doesnotexist {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'No DirectiveResolver resolves directive with name \'doesnotexist\''):
+      return True
+
+    query = ''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'The query in the body is empty'):
+      return True
+
     return False
 
   def engine_wpgraphql(self):
-    preferred_urls = []
-    query = ''' {
+    query = ''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'GraphQL Request must include at least one of those two parameters: "query" or "queryId"'):
+      return True
+    
+    query = ''' 
+     query {
        alias1$1:__schema
      }
     '''
     response = self.graph_query(self.url, payload=query)
+    if not error_contains(response, 'Syntax Error: Expected Name, found $'):
+      return False
+    
+    try:
+      debug_msg = response['extensions']['debug'][0]
+      if debug_msg['type'] == 'DEBUG_LOGS_INACTIVE' or \
+        debug_msg['message'] == 'GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled.':
+        return True
+    except KeyError:
+      pass
 
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get('message', '')
-        if 'Syntax Error: Expected Name, found $' not in err_message:
-          return False
-      try:
-        debug_msg = response['extensions']['debug'][0]
-        if debug_msg['type'] == 'DEBUG_LOGS_INACTIVE' or \
-          debug_msg['message'] == 'GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled.':
-          return True
-      except KeyError:
-        pass
-
+    return False
 

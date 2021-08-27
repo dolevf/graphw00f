@@ -8,6 +8,7 @@ from time import sleep
 from urllib.parse import urlparse
 from optparse import OptionParser
 
+from version import VERSION
 from graphw00f.lib import GRAPHW00F
 
 
@@ -36,7 +37,7 @@ def main():
       sys.exit(0)
     
     if options.version:
-      print('version:', graphw00f.helpers.VERSION)
+      print('version:', VERSION)
       sys.exit(0)
 
     if not options.url:
@@ -73,35 +74,37 @@ def main():
     detected = None
     print('[*] Checking if GraphQL is available at {url}...'.format(url=url))
     
-    if not g.check(url):
+    if g.check(url):
+      print('[*] Found GraphQL.')
+    else:
       print('[*] Continue anyway? [y/n]'.format(url=url))
       
       choice = input().lower()
       if not graphw00f.helpers.user_confirmed(choice):
         print('Quitting.')
         sys.exit(1)
+    
+    print('[*] Attempting to fingerprint...')
+    result = g.execute(url)
+    
+    if result:
+      name = graphw00f.helpers.get_engines()[result]['name']
+      url = graphw00f.helpers.get_engines()[result]['url']
+      language = ', '.join(graphw00f.helpers.get_engines()[result]['language'])
+      detected = name
+      print('[*] Discovered GraphQL Engine!')
+      print('[!] The site {} is using: {}'.format(url, name))
+      print('[!] Language: {}'.format(language))
+      print('[!] Homepage: {}'.format(url))
       
-      g.execute(url)
-    else:
-      print('[*] Attempting to fingerprint...')
-      result = g.execute(url)
-      
-      if result:
-        name = graphw00f.helpers.get_engines()[result]['name']
-        url = graphw00f.helpers.get_engines()[result]['url']
-        language = ', '.join(graphw00f.helpers.get_engines()[result]['language'])
-        detected = name
-        print('[*] Discovered GraphQL Engine!')
-        print('[!] The site {} is using: {}'.format(url, name))
-        print('[!] Language: {}'.format(language))
-        print('[!] Homepage: {}'.format(url))
-        
 
     if options.output_file:
       f = open(options.output_file, 'w')
       f.write('url,detected_engine,timestamp\n')
       f.write('{},{},{}\n'.format(url_netloc, detected, graphw00f.helpers.get_time()))
       f.close()
+    
+    print('[*] DONE.')
 
 if __name__ == '__main__':
     main()

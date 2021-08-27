@@ -1,8 +1,16 @@
 
 import datetime
 from urllib.parse import urlparse
+from version import VERSION
 
-VERSION = '1.0.0'
+def error_contains(response, word_to_match):
+  if isinstance(response, dict):
+    if response.get('errors'):
+      for i in response['errors']:
+        err_message = i.get('message', '')
+        if word_to_match in err_message:
+          return True
+    return False
 
 def get_time():
   return datetime.datetime.now().strftime('%Y-%m-%d')
