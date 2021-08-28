@@ -109,15 +109,6 @@ class GRAPHW00F:
     if error_contains(response, 'Syntax Error GraphQL (1:1)'):
       return True
 
-    query = '''
-      query ? {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Cannot parse the unexpected character \'?\'.'):
-      return True
-
     return False
    
   def engine_hasura(self):
@@ -162,14 +153,14 @@ class GRAPHW00F:
     return False
     
   def engine_graphqlphp(self):
-    # query = ''' 
-    #   query @skip {
-    #     __typename
-    #   }
-    # '''
-    # response = self.graph_query(self.url, payload=query)
-    # if error_contains(response, 'Directive "@skip" argument "if" of type "Boolean!" is required but not provided.'):
-    #   return True
+    query = ''' 
+      query ! {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Syntax Error: Cannot parse the unexpected character "?".'):
+      return True
     
     query = '''
       subscription {
