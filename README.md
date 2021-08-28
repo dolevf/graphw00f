@@ -87,10 +87,7 @@ python3 graphw00f.py -t http://127.0.0.1:5000/graphql
 [!] Homepage: https://graphene-python.org
 [*] DONE.
 ```
-
-# CWE Reference
-[CWE-200: Exposure of Sensitive Information to an Unauthorized Actor](https://cwe.mitre.org/data/definitions/200.html)
-
+                                                                                                              
 # Support and Issues
 Any issues with graphw00f such as false/true positives, inaccurate detections, etc. please create a GitHub issue with environment details.
 
