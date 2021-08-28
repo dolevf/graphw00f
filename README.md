@@ -7,9 +7,9 @@
 graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is a GraphQL fingerprinting tool. 
 
 # How does it work?
-graphw00f sends a mixture of benign and malformed queries to determine the GraphQL engine running behind the scenes.
+graphw00f is a Python utility which attempts to send a mixture of benign and malformed queries to determine the GraphQL engine running behind the scenes.
 
-Different GraphQL servers respond uniquely to queries (CWE: [CWE-200](#CWE-Reference)), mutations and subscriptions given the right payload, this makes it trivial to fingerprint and distinguish between the various GraphQL servers.
+Different GraphQL servers respond uniquely to queries, mutations and subscriptions given the right payload, this makes it trivial to fingerprint and distinguish between the various GraphQL servers. (CWE: [CWE-200](#CWE-Reference))
 
 # Detections / Signatures
 graphw00f currently attempts to discover the following GraphQL engines:
@@ -24,7 +24,17 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * graphql-php
 * Hasura
 
-# Usage
+# Prerequisites
+* python3
+* requests
+
+# Installation
+## Clone Repository
+`git clone git@github.com:dolevf/graphw00f.git`
+
+## Run graphw00f
+`python3 main.py -h`
+
 ```
 Usage: main.py -h
 
@@ -80,7 +90,6 @@ python3 graphw00f.py -t http://127.0.0.1:5000/graphql
 
 # CWE Reference
 [CWE-200: Exposure of Sensitive Information to an Unauthorized Actor](https://cwe.mitre.org/data/definitions/200.html)
-
 
 # Support and Issues
 Any issues with graphw00f such as false/true positives, inaccurate detections, etc. please create a GitHub issue with environment details.
