@@ -89,6 +89,11 @@ def get_engines():
       'name':'WPGraphQL WordPress Plugin',
       'url':'https://www.wpgraphql.com',
       'language':['PHP']
+    },
+    'gqlgen':{
+      'name':'gqlgen - GraphQL for Go',
+      'url':'https://gqlgen.com',
+      'language':['Go']
     }
   }
 

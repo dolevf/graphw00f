@@ -57,6 +57,8 @@ class GRAPHW00F:
       return 'ruby-graphql'
     elif self.engine_graphqlphp():
       return 'graphql-php'
+    elif self.engine_gqlgen():
+      return 'gqlgen'
     return None
   
   def graph_query(self, url, operation='query', payload={}):
@@ -102,6 +104,15 @@ class GRAPHW00F:
     if error_contains(response, 'Syntax Error GraphQL (1:1)'):
       return True
 
+    query = '''
+      query ? {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Cannot parse the unexpected character \'?\'.'):
+      return True
+
     return False
    
   def engine_hasura(self):
@@ -111,9 +122,10 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    if response.get('data', {}).get('__typename') == 'query_root':
-      return True
-    
+    if response.get('data'):
+      if response.get('data', {}).get('__typename', '') == 'query_root':
+        return True
+      
     query = '''
       query { 
         __schema 
@@ -145,14 +157,14 @@ class GRAPHW00F:
     return False
     
   def engine_graphqlphp(self):
-    query = ''' 
-      query @skip {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive "@skip" argument "if" of type "Boolean!" is required but not provided.'):
-      return True
+    # query = ''' 
+    #   query @skip {
+    #     __typename
+    #   }
+    # '''
+    # response = self.graph_query(self.url, payload=query)
+    # if error_contains(response, 'Directive "@skip" argument "if" of type "Boolean!" is required but not provided.'):
+    #   return True
     
     query = '''
       subscription {
@@ -273,11 +285,9 @@ class GRAPHW00F:
      }
     '''
     response = self.graph_query(self.url, payload=query)
-    try:
-      if response['data']['alias1$1'] == 'schema':
-        return True
-    except KeyError:
-      pass
+    if response.get('data'):
+      if response.get('data').get('alias1$1', '') == 'schema':
+        return True    
 
     query = '''query aa#aa { __typename }'''
     response = self.graph_query(self.url, payload=query)
@@ -335,3 +345,62 @@ class GRAPHW00F:
 
     return False
 
+  def engine_gqlgen(self):    
+    query = '''
+      query @aa@aa  {
+      __schema 
+    }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    
+    if error_contains(response, 'The directive "aa" can only be used once at this location.'):
+      return True
+
+    query = ''' 
+     queryyy {
+       __schema
+     }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Unexpected Name "queryyy"'):
+      return True
+    return False
+
+  def engine_graphqlgo(self):
+    query = ''' 
+     query @skip {
+       abc
+     }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Directive "skip" may not be used on QUERY. Directive "@skip" argument "if" of type "Boolean!" is required but not provided'):
+      return True
+    
+    query = ''
+    response = self.graph_query(self.url, payload=query)
+    
+    if error_contains(response, 'Must provide an operation.'):
+      return True
+    
+    query = ''' 
+      query ? {
+        __schema
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    
+    if error_contains(response, 'Unexpected character "?"'):
+      return True
+
+    query = ''' 
+      query ? {
+        __schema
+      }
+    '''
+
+    response = self.graph_query(self.url, payload=query)
+    
+    if error_contains(response, 'Syntax Error GraphQL request'):
+      return True
+
+    return False
