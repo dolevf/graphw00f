@@ -48,7 +48,7 @@ def get_engines():
     'apollo':{
       'name':'Apollo',
       'url':'https://www.apollographql.com',
-      'language':['JavaScript']
+      'language':['JavaScript', 'Node.js']
     },
     'graphene':{
       'name':'Graphene',
@@ -80,7 +80,7 @@ def get_engines():
       'url':'https://ariadnegraphql.org',
       'language':['Python']
     },
-    'graphqlapiforwp':{
+    'graphql-api-for-wp':{
       'name':'GraphQL API for Wordpress',
       'url':'https://graphql-api.com',
       'language':['PHP'],
@@ -93,6 +93,11 @@ def get_engines():
     'gqlgen':{
       'name':'gqlgen - GraphQL for Go',
       'url':'https://gqlgen.com',
+      'language':['Go']
+    },
+    'graphql-go':{
+      'name':'graphql-go -GraphQL for Go',
+      'url':'https://github.com/graphql-go/graphql',
       'language':['Go']
     }
   }

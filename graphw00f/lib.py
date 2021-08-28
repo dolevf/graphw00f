@@ -2,6 +2,8 @@ import requests
 
 from graphw00f.helpers import error_contains
 
+requests.packages.urllib3.disable_warnings()
+
 class GraphQLNotFound(Exception):
   pass
 
@@ -50,7 +52,7 @@ class GRAPHW00F:
     elif self.engine_wpgraphql():
       return 'wpgraphql'
     elif self.engine_graphqlapiforwp():
-      return 'graphqlapiforwp'
+      return 'graphql-api-for-wp'
     elif self.engine_hypergraphql():
       return 'hypergraphql'
     elif self.engine_ruby():
@@ -59,6 +61,8 @@ class GRAPHW00F:
       return 'graphql-php'
     elif self.engine_gqlgen():
       return 'gqlgen'
+    elif self.engine_graphqlgo():
+      return 'graphql-go'
     return None
   
   def graph_query(self, url, operation='query', payload={}):
@@ -66,6 +70,7 @@ class GRAPHW00F:
       response = requests.post(url, 
                              headers=self.headers,
                              cookies=self.cookies,
+                             verify=False,
                              allow_redirects=self.follow_redirects,
                              json={operation:payload})
       return response.json()
