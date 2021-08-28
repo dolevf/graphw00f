@@ -9,7 +9,6 @@ def error_contains(response, word_to_match):
       for i in response['errors']:
         err_message = i.get('message', '')
         if word_to_match in err_message:
-          print(word_to_match, '\n', err_message)
           return True
     return False
 

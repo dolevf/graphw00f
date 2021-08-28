@@ -35,7 +35,7 @@ def main():
                                             language=', '.join(v['language']))
                                            )
       sys.exit(0)
-    
+  
     if options.version:
       print('version:', VERSION)
       sys.exit(0)
@@ -49,10 +49,6 @@ def main():
     url_scheme = urlparse(url).scheme
     url_netloc = urlparse(url).netloc
     
-    g = GRAPHW00F(follow_redirects=options.followredirect,
-                  headers=conf.HEADERS, 
-                  cookies=conf.COOKIES)
-
     print(graphw00f.helpers.draw_art())
 
     if url_scheme not in ('http', 'https'):
@@ -71,8 +67,12 @@ def main():
         sys.exit(1)
 
     
-    detected = None
     print('[*] Checking if GraphQL is available at {url}...'.format(url=url))
+    
+    g = GRAPHW00F(follow_redirects=options.followredirect,
+                  headers=conf.HEADERS, 
+                  cookies=conf.COOKIES)
+    detected = None
     
     if g.check(url):
       print('[*] Found GraphQL.')
