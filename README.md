@@ -1,10 +1,8 @@
-<p align="center">
-  <img src="https://github.com/dolevf/graphw00f/blob/main/static/graphw00f.png?raw=true" width="alt="graphw00f"/>
-</p>
-
-<p align="center">
-    <center><h1>graphw00f - GraphQL Fingerprinting</h1></center>
-</p>
+<h1 align="center">
+ <img src="https://github.com/dolevf/graphw00f/blob/main/static/graphw00f.png?raw=true" width="alt="graphw00f"/>
+ <br>
+ graphw00f - GraphQL Fingerprinting
+</h1>
 
 graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is a GraphQL fingerprinting tool. 
 
