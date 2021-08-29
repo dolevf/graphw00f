@@ -106,8 +106,7 @@ def main():
       ref = get_engines()[result]['ref']
       technologies = ', '.join(get_engines()[result]['technology'])
       detected = name
-      print(bcolors.OKGREEN + '[*] Discovered GraphQL Engine!')
-      print('[!] The site {} is using: {}'.format(url, name))
+      print(bcolors.OKGREEN + '[*] Discovered GraphQL Engine: ({})'.format(name))
       print('[!] Attack Surface Matrix: {}'.format(ref))
       print('[!] Technologies: {}'.format(technologies))
       print('[!] Homepage: {}'.format(url))
