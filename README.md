@@ -99,14 +99,13 @@ python3 main.py -t http://127.0.0.1:5000/graphql
                 graphw00f - v1.0.0
           The fingerprinting tool for GraphQL
   
-[*] Checking if GraphQL is available at http://127.0.0.1:8088/graphql...
-[*] Found GraphQL.
+[*] Checking if GraphQL is available at https://demo.hypergraphql.org:8484/graphql...
+[*] Found GraphQL...
 [*] Attempting to fingerprint...
-[*] Discovered GraphQL Engine!
-[!] The site https://www.graphql-java.com is using: graphql-java - GraphQL for Java
-[!] Attack Surface Matrix: https://github.com/dolevf/graphw00f/blob/main/docs/graphql-java.md
+[*] Discovered GraphQL Engine: (HyperGraphQL)
+[!] Attack Surface Matrix: https://github.com/dolevf/graphw00f/blob/main/docs/hypergraphql.md
 [!] Technologies: Java
-[!] Homepage: https://www.graphql-java.com
+[!] Homepage: https://www.hypergraphql.org
 [*] Completed.
 ```
                                                                                                               
