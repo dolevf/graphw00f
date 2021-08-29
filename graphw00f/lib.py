@@ -53,6 +53,8 @@ class GRAPHW00F:
       return 'wpgraphql'
     elif self.engine_graphqlapiforwp():
       return 'graphql-api-for-wp'
+    elif self.engine_graphqljava():
+      return 'graphql-java'
     elif self.engine_hypergraphql():
       return 'hypergraphql'
     elif self.engine_ruby():
@@ -218,16 +220,7 @@ class GRAPHW00F:
     
     return False
     
-  def engine_hypergraphql(self):
-    query = '''
-     query @skip { 
-        __typename 
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Validation error of type MisplacedDirective: Directive skip not allowed here'):
-      return True
-    
+  def engine_hypergraphql(self):    
     query = '''
      zzz { 
         __typename 
@@ -238,16 +231,50 @@ class GRAPHW00F:
       return True
 
     query = '''
-     query aaa@aaa { 
+    query {
+      __schema {
+        directives {
+          descriptio
+        }
+      }
+    }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if response.get('errors'):
+      for i in response['errors']:
+        qp = i.get('queryPath', [])
+        matches = ['__schema', 'directives', 'descriptio'] 
+        if qp == matches:
+          return True
+  
+    return False
+  
+  def engine_graphqljava(self):    
+    query = '''
+     queryy  { 
         __typename 
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Validation error of type UnknownDirective: Unknown directive aaa'):
+    if error_contains(response, 'Invalid Syntax : offending token \'queryy\''):
       return True
-    
+
+    query = '''
+     query @aaa@aaa { 
+        __typename 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Validation error of type DuplicateDirectiveName: Directives must be uniquely named within a location.'):
+      return True
+
+    query = ''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Invalid Syntax : offending token \'<EOF>\''):
+      return True
+
     return False
-  
+
   def engine_ariadne(self):
     query = '''
       query { 

@@ -2,8 +2,13 @@
 # -*- coding: utf-8 -*-
 import sys
 import conf
-import graphw00f.helpers
 
+from graphw00f.helpers import (
+  get_time, 
+  draw_art, 
+  get_engines, 
+  user_confirmed
+)
 from time import sleep
 from urllib.parse import urlparse
 from optparse import OptionParser
@@ -27,7 +32,7 @@ def main():
     options, args = parser.parse_args()
 
     if options.list:
-      print(graphw00f.helpers.draw_art())
+      print(draw_art())
       for k, v in graphw00f.helpers.get_engines().items():
         print('{key}: {name} ({language})'.format(
                                             key=k,
@@ -49,7 +54,7 @@ def main():
     url_scheme = urlparse(url).scheme
     url_netloc = urlparse(url).netloc
     
-    print(graphw00f.helpers.draw_art())
+    print(draw_art())
 
     if url_scheme not in ('http', 'https'):
       print('URL is missing a scheme (http|https)')
@@ -63,7 +68,7 @@ def main():
       print('[*] No URL path was provided.')
       print('[*[ are you sure you want to fingerprint the server without a path? [y/n]')
       choice = input().lower()
-      if not graphw00f.helpers.user_confirmed(choice):
+      if not user_confirmed(choice):
         sys.exit(1)
 
     
@@ -80,7 +85,7 @@ def main():
       print('[*] Continue anyway? [y/n]'.format(url=url))
       
       choice = input().lower()
-      if not graphw00f.helpers.user_confirmed(choice):
+      if not user_confirmed(choice):
         print('Quitting.')
         sys.exit(1)
     
@@ -88,21 +93,21 @@ def main():
     result = g.execute(url)
     
     if result:
-      name = graphw00f.helpers.get_engines()[result]['name']
-      url = graphw00f.helpers.get_engines()[result]['url']
-      ref = graphw00f.helpers.get_engines()[result]['ref']
-      technologies = ', '.join(graphw00f.helpers.get_engines()[result]['technology'])
+      name = get_engines()[result]['name']
+      url = get_engines()[result]['url']
+      ref = get_engines()[result]['ref']
+      technologies = ', '.join(get_engines()[result]['technology'])
       detected = name
       print('[*] Discovered GraphQL Engine!')
       print('[!] The site {} is using: {}'.format(url, name))
+      print('[!] Attack Surface Matrix: {}'.format(ref))
       print('[!] Technologies: {}'.format(technologies))
       print('[!] Homepage: {}'.format(url))
-      print('[!] Use the Security Defence Matrix for {} to understand its attack surface: {}'.format(name, ref))
-      print
+    
     if options.output_file:
       f = open(options.output_file, 'w')
       f.write('url,detected_engine,timestamp\n')
-      f.write('{},{},{}\n'.format(url_netloc, detected, graphw00f.helpers.get_time()))
+      f.write('{},{},{}\n'.format(url_netloc, detected, get_time()))
       f.close()
     
     print('[*] DONE.')

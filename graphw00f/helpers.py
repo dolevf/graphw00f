@@ -3,6 +3,13 @@ import datetime
 from urllib.parse import urlparse
 from version import VERSION
 
+class bcolors:
+  OKBLUE = '\033[94m'
+  OKCYAN = '\033[96m'
+  OKGREEN = '\033[92m'
+  WARNING = '\033[93m'
+  FAIL = '\033[91m'
+
 def error_contains(response, word_to_match):
   if isinstance(response, dict):
     if response.get('errors'):
@@ -110,6 +117,12 @@ def get_engines():
       'url':'https://github.com/graphql-go/graphql',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-go.md',
       'technology':['Go']
+    },
+    'graphql-java':{
+      'name':'graphql-java - GraphQL for Java',
+      'url':'https://www.graphql-java.com',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-java.md',
+      'technology':['Java']
     }
   }
 
