@@ -124,6 +124,12 @@ def get_engines():
       'url':'https://www.graphql-java.com',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-java.md',
       'technology':['Java']
+    },
+    'juniper':{
+      'name':'Juniper - GraphQL for Rust',
+      'url':'https://graphql-rust.github.io',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/juniper.md',
+      'technology':['Rust']
     }
   }
 

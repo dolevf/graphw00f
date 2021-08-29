@@ -65,6 +65,8 @@ class GRAPHW00F:
       return 'gqlgen'
     elif self.engine_graphqlgo():
       return 'graphql-go'
+    elif self.engine_juniper():
+      return 'juniper'
     return None
   
   def graph_query(self, url, operation='query', payload={}):
@@ -427,3 +429,21 @@ class GRAPHW00F:
       return True
 
     return False
+
+  def engine_juniper(self):
+    query = ''' 
+      queryy {
+        __typename
+    }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Unexpected "queryy"'):
+      return True
+    
+
+    query = ''
+    response = self.graph_query(self.url, payload=query)
+    
+    if error_contains(response, 'Unexpected end of input'):
+      return True
+    
