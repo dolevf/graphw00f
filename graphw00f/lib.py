@@ -4,7 +4,10 @@ from graphw00f.helpers import error_contains
 
 requests.packages.urllib3.disable_warnings()
 
-class GraphQLNotFound(Exception):
+class GraphQLDetectionFailed(Exception):
+  pass
+
+class GraphQLUnknownState(Exception):
   pass
 
 class GraphQLError(Exception):
@@ -26,18 +29,15 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(url, payload=query)
-    try:  
-      if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
-        return True
-      elif response.get('errors') and any('locations' in i for i in response['errors']):
-        return True
-      elif response.get('data'):
-        return True
-      else: 
-        raise GraphQLNotFound
-    except GraphQLNotFound:
-      print('[x] Could not determine existence of GraphQL (GraphQLNotFound)')
-    return False
+    if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
+      return True
+    elif response.get('errors') and any('locations' in i for i in response['errors']):
+      return True
+    elif response.get('data'):
+      return True
+    else: 
+      raise GraphQLDetectionFailed
+    raise GraphQLUnknownState
 
   def execute(self, url):    
     self.url = url

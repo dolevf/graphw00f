@@ -7,14 +7,19 @@ from graphw00f.helpers import (
   get_time, 
   draw_art, 
   get_engines, 
-  user_confirmed
+  user_confirmed,
+  bcolors
 )
 from time import sleep
 from urllib.parse import urlparse
 from optparse import OptionParser
 
 from version import VERSION
-from graphw00f.lib import GRAPHW00F
+from graphw00f.lib import (
+  GRAPHW00F, 
+  GraphQLDetectionFailed, 
+  GraphQLUnknownState
+)
 
 
 def main():
@@ -78,17 +83,20 @@ def main():
                   headers=conf.HEADERS, 
                   cookies=conf.COOKIES)
     detected = None
-    
-    if g.check(url):
-      print('[*] Found GraphQL.')
-    else:
-      print('[*] Continue anyway? [y/n]'.format(url=url))
-      
-      choice = input().lower()
-      if not user_confirmed(choice):
-        print('Quitting.')
-        sys.exit(1)
-    
+    try:
+      if g.check(url):
+        print('[*] Found GraphQL.')
+    except GraphQLDetectionFailed:
+        print(bcolors.FAIL + '[x] Could not determine existence of GraphQL (GraphQLDetectionFailed)' + bcolors.ENDC)
+        print('[*] Continue anyway? [y/n]'.format(url=url))
+        choice = input().lower()
+        if not user_confirmed(choice):
+          print('Quitting.')
+          sys.exit(1)
+    except GraphQLUnknownState:
+      print('Something went wrong.')
+      sys.exit(1)
+
     print('[*] Attempting to fingerprint...')
     result = g.execute(url)
     
@@ -98,19 +106,21 @@ def main():
       ref = get_engines()[result]['ref']
       technologies = ', '.join(get_engines()[result]['technology'])
       detected = name
-      print('[*] Discovered GraphQL Engine!')
+      print(bcolors.OKGREEN + '[*] Discovered GraphQL Engine!')
       print('[!] The site {} is using: {}'.format(url, name))
       print('[!] Attack Surface Matrix: {}'.format(ref))
       print('[!] Technologies: {}'.format(technologies))
       print('[!] Homepage: {}'.format(url))
-    
+    else:
+      print('[x] Nothing was found :-(')
+
     if options.output_file:
       f = open(options.output_file, 'w')
       f.write('url,detected_engine,timestamp\n')
       f.write('{},{},{}\n'.format(url_netloc, detected, get_time()))
       f.close()
     
-    print('[*] DONE.')
+    print('[*] Completed.')
 
 if __name__ == '__main__':
     main()
