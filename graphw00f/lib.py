@@ -67,6 +67,8 @@ class GRAPHW00F:
       return 'graphql-go'
     elif self.engine_juniper():
       return 'juniper'
+    elif self.engine_sangria():
+      return 'sangria'
     return None
   
   def graph_query(self, url, operation='query', payload={}):
@@ -445,6 +447,19 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     
     if error_contains(response, 'Unexpected end of input'):
+      return True
+    
+    return False
+
+  def engine_sangria(self):
+    query = ''' 
+      queryyy {
+        __typename
+    }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    syntaxError = response.get('syntaxError', '')
+    if 'Syntax error while parsing GraphQL query. Invalid input "queryyy", expected ExecutableDefinition or TypeSystemDefinition' in syntaxError:
       return True
     
     return False

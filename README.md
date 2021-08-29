@@ -30,12 +30,13 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * gqlgen
 * WPGraphQL
 * GraphQL API for Wordpress
-* Ruby GraphQL
+* Ruby - GraphQL
 * graphql-php
 * Hasura
 * HyperGraphQL
 * GraphQL for Java
-* Juniper Rust
+* Juniper - Rust
+* Sangria - Scala
                                                                                            
 # GraphQL Technologies Defence Matrices
 Each fingerprinted technology (e.g. Graphene, Ariadne, ...) has an associated document ([example for graphene](https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md)) which covers the security defence mechanisms the specific technology supports to give a better idea how the implementation may be attacked.

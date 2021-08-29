@@ -130,6 +130,12 @@ def get_engines():
       'url':'https://graphql-rust.github.io',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/juniper.md',
       'technology':['Rust']
+    },
+    'sangria':{
+      'name':'Sangria - GraphQL for Scala',
+      'url':'https://sangria-graphql.github.io',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/sangria.md',
+      'technology':['Scala']
     }
   }
 
