@@ -37,6 +37,7 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * GraphQL for Java
 * Juniper - Rust
 * Sangria - Scala
+* Flutter
                                                                                            
 # GraphQL Technologies Defence Matrices
 Each fingerprinted technology (e.g. Graphene, Ariadne, ...) has an associated document ([example for graphene](https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md)) which covers the security defence mechanisms the specific technology supports to give a better idea how the implementation may be attacked.

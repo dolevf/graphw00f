@@ -69,6 +69,8 @@ class GRAPHW00F:
       return 'juniper'
     elif self.engine_sangria():
       return 'sangria'
+    elif self.engine_flutter():
+      return 'flutter'
     return None
   
   def graph_query(self, url, operation='query', payload={}):
@@ -460,6 +462,18 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     syntaxError = response.get('syntaxError', '')
     if 'Syntax error while parsing GraphQL query. Invalid input "queryy", expected ExecutableDefinition or TypeSystemDefinition' in syntaxError:
+      return True
+    
+    return False
+
+  def engine_flutter(self):
+    query = ''' 
+      queryy {
+        __typename @deprecated
+    }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Directive "deprecated" may not be used on FIELD.')
       return True
     
     return False
