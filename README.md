@@ -80,14 +80,15 @@ python3 graphw00f.py -t http://127.0.0.1:5000/graphql
                 graphw00f - v1.0.0
           The fingerprinting tool for GraphQL
   
-[*] Checking if GraphQL is available at http://127.0.0.1:5000/graphql...
+[*] Checking if GraphQL is available at http://127.0.0.1:8088/graphql...
 [*] Found GraphQL.
 [*] Attempting to fingerprint...
 [*] Discovered GraphQL Engine!
-[!] The site https://graphene-python.org is using: Graphene
-[!] Language: Python
-[!] Homepage: https://graphene-python.org
-[*] DONE.
+[!] The site https://www.graphql-java.com is using: graphql-java - GraphQL for Java
+[!] Attack Surface Matrix: https://github.com/dolevf/graphw00f/blob/main/docs/graphql-java.md
+[!] Technologies: Java
+[!] Homepage: https://www.graphql-java.com
+[*] Completed.
 ```
                                                                                                               
 # Support and Issues
