@@ -23,6 +23,8 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * Ruby GraphQL
 * graphql-php
 * Hasura
+* HyperGraphQL
+* GraphQL for Java
 
 # Prerequisites
 * python3
