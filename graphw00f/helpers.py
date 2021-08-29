@@ -48,57 +48,57 @@ def get_engines():
     'apollo':{
       'name':'Apollo',
       'url':'https://www.apollographql.com',
-      'language':['JavaScript', 'Node.js']
+      'technology':['JavaScript', 'Node.js', 'TypeScript']
     },
     'graphene':{
       'name':'Graphene',
       'url':'https://graphene-python.org',
-      'language':['Python']
+      'technology':['Python']
     },
     'hasura':{
       'name':'Hasura',
       'url':'https://hasura.io',
-      'language':['Haskell']
+      'technology':['Haskell']
     },
     'graphql-php':{
       'name':'GraphQL PHP',
       'url':'https://webonyx.github.io/graphql-php',
-      'language':['PHP']
+      'technology':['PHP']
     },
     'ruby-graphql':{
       'name':'Ruby GraphQL',
       'url':'https://graphql-ruby.org',
-      'language':['Ruby']
+      'technology':['Ruby']
     },
     'hypergraphql':{
       'name':'HyperGraphQL',
       'url':'https://www.hypergraphql.org',
-      'language':['Java']
+      'technology':['Java']
     },
     'ariadne':{
       'name':'Ariadne',
       'url':'https://ariadnegraphql.org',
-      'language':['Python']
+      'technology':['Python']
     },
     'graphql-api-for-wp':{
       'name':'GraphQL API for Wordpress',
       'url':'https://graphql-api.com',
-      'language':['PHP'],
+      'technology':['PHP'],
     },
     'wpgraphql':{
       'name':'WPGraphQL WordPress Plugin',
       'url':'https://www.wpgraphql.com',
-      'language':['PHP']
+      'technology':['PHP']
     },
     'gqlgen':{
       'name':'gqlgen - GraphQL for Go',
       'url':'https://gqlgen.com',
-      'language':['Go']
+      'technology':['Go']
     },
     'graphql-go':{
       'name':'graphql-go -GraphQL for Go',
       'url':'https://github.com/graphql-go/graphql',
-      'language':['Go']
+      'technology':['Go']
     }
   }
 

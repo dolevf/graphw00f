@@ -90,11 +90,11 @@ def main():
     if result:
       name = graphw00f.helpers.get_engines()[result]['name']
       url = graphw00f.helpers.get_engines()[result]['url']
-      language = ', '.join(graphw00f.helpers.get_engines()[result]['language'])
+      technologies = ', '.join(graphw00f.helpers.get_engines()[result]['technology'])
       detected = name
       print('[*] Discovered GraphQL Engine!')
       print('[!] The site {} is using: {}'.format(url, name))
-      print('[!] Language: {}'.format(language))
+      print('[!] Technologies: {}'.format(technologies))
       print('[!] Homepage: {}'.format(url))
       
 
