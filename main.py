@@ -90,14 +90,15 @@ def main():
     if result:
       name = graphw00f.helpers.get_engines()[result]['name']
       url = graphw00f.helpers.get_engines()[result]['url']
+      ref = graphw00f.helpers.get_engines()[result]['ref']
       technologies = ', '.join(graphw00f.helpers.get_engines()[result]['technology'])
       detected = name
       print('[*] Discovered GraphQL Engine!')
       print('[!] The site {} is using: {}'.format(url, name))
       print('[!] Technologies: {}'.format(technologies))
       print('[!] Homepage: {}'.format(url))
-      
-
+      print('[!] Use the Security Defence Matrix for {} to understand its attack surface: {}'.format(name, ref))
+      print
     if options.output_file:
       f = open(options.output_file, 'w')
       f.write('url,detected_engine,timestamp\n')

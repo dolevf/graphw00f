@@ -48,56 +48,67 @@ def get_engines():
     'apollo':{
       'name':'Apollo',
       'url':'https://www.apollographql.com',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/apollo.md',
       'technology':['JavaScript', 'Node.js', 'TypeScript']
     },
     'graphene':{
       'name':'Graphene',
       'url':'https://graphene-python.org',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md',
       'technology':['Python']
     },
     'hasura':{
       'name':'Hasura',
       'url':'https://hasura.io',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/hasura.md',
       'technology':['Haskell']
     },
     'graphql-php':{
       'name':'GraphQL PHP',
       'url':'https://webonyx.github.io/graphql-php',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-php.md',
       'technology':['PHP']
     },
     'ruby-graphql':{
       'name':'Ruby GraphQL',
       'url':'https://graphql-ruby.org',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/ruby-graphql.md',
       'technology':['Ruby']
     },
     'hypergraphql':{
       'name':'HyperGraphQL',
       'url':'https://www.hypergraphql.org',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/hypergraphql.md',
       'technology':['Java']
     },
     'ariadne':{
       'name':'Ariadne',
       'url':'https://ariadnegraphql.org',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/ariadne.md',
       'technology':['Python']
     },
     'graphql-api-for-wp':{
       'name':'GraphQL API for Wordpress',
       'url':'https://graphql-api.com',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphqlapiforwp.md',
       'technology':['PHP'],
     },
     'wpgraphql':{
       'name':'WPGraphQL WordPress Plugin',
       'url':'https://www.wpgraphql.com',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/wpgraphql.md',
       'technology':['PHP']
     },
     'gqlgen':{
       'name':'gqlgen - GraphQL for Go',
       'url':'https://gqlgen.com',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/gqlgen.md',
       'technology':['Go']
     },
     'graphql-go':{
       'name':'graphql-go -GraphQL for Go',
       'url':'https://github.com/graphql-go/graphql',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-go.md',
       'technology':['Go']
     }
   }
