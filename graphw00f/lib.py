@@ -447,3 +447,4 @@ class GRAPHW00F:
     if error_contains(response, 'Unexpected end of input'):
       return True
     
+    return False
