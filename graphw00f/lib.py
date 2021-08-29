@@ -71,6 +71,8 @@ class GRAPHW00F:
       return 'sangria'
     elif self.engine_flutter():
       return 'flutter'
+    elif self.engine_dianajl():
+      return 'dianajl'
     return None
   
   def graph_query(self, url, operation='query', payload={}):
@@ -106,12 +108,7 @@ class GRAPHW00F:
     if error_contains(response, 'Directive "@deprecated" may not be used on QUERY.'):
       return True
   
-  def engine_graphene(self):
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Must provide query string.'):
-      return True
-      
+  def engine_graphene(self):      
     query = '''aaa'''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Syntax Error GraphQL (1:1)'):
@@ -385,16 +382,6 @@ class GRAPHW00F:
     if error_contains(response, 'The directive "aa" can only be used once at this location.'):
       return True
 
-    query = ''' 
-     queryyy {
-       __schema
-     }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Unexpected Name "queryyy"'):
-      return True
-    return False
-
   def engine_graphqlgo(self):
     query = ''' 
      query @skip {
@@ -409,27 +396,6 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     
     if error_contains(response, 'Must provide an operation.'):
-      return True
-    
-    query = ''' 
-      query ? {
-        __schema
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    
-    if error_contains(response, 'Unexpected character "?"'):
-      return True
-
-    query = ''' 
-      query ? {
-        __schema
-      }
-    '''
-
-    response = self.graph_query(self.url, payload=query)
-    
-    if error_contains(response, 'Syntax Error GraphQL request'):
       return True
 
     return False
@@ -473,7 +439,15 @@ class GRAPHW00F:
     }
     '''
     response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive "deprecated" may not be used on FIELD.')
+    if error_contains(response, 'Directive "deprecated" may not be used on FIELD.'):
+      return True
+    
+    return False
+
+  def engine_dianajl(self):
+    query = '''query a# { __typename }'''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'found EOF'):
       return True
     
     return False

@@ -142,6 +142,12 @@ def get_engines():
       'url':'https://github.com/zino-app/graphql-flutter',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/flutter.md',
       'technology':['Dart']
+    },
+    'dianajl':{
+      'name':'Diana.jl - GraphQL for Julia',
+      'url':'https://github.com/neomatrixcode/Diana.jl',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/dianajl.md',
+      'technology':['Julia']
     }
   }
 
