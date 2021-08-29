@@ -85,7 +85,7 @@ def main():
     detected = None
     try:
       if g.check(url):
-        print('[*] Found GraphQL.')
+        print('[*] Found GraphQL...')
     except GraphQLDetectionFailed:
         print(bcolors.FAIL + '[x] Could not determine existence of GraphQL (GraphQLDetectionFailed)' + bcolors.ENDC)
         print('[*] Continue anyway? [y/n]'.format(url=url))
@@ -119,7 +119,7 @@ def main():
       f.write('{},{},{}\n'.format(url_netloc, detected, get_time()))
       f.close()
     
-    print('[*] Completed.')
+    print(bcolors.ENDC + '[*] Completed.')
 
 if __name__ == '__main__':
     main()
