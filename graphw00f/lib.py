@@ -453,13 +453,13 @@ class GRAPHW00F:
 
   def engine_sangria(self):
     query = ''' 
-      queryyy {
+      queryy {
         __typename
     }
     '''
     response = self.graph_query(self.url, payload=query)
     syntaxError = response.get('syntaxError', '')
-    if 'Syntax error while parsing GraphQL query. Invalid input "queryyy", expected ExecutableDefinition or TypeSystemDefinition' in syntaxError:
+    if 'Syntax error while parsing GraphQL query. Invalid input "queryy", expected ExecutableDefinition or TypeSystemDefinition' in syntaxError:
       return True
     
     return False
