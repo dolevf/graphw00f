@@ -17,9 +17,9 @@ graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is 
 
 
 # How does it work?
-graphw00f is a Python utility which attempts to send a mixture of benign and malformed queries to determine the GraphQL engine running behind the scenes.
+graphw00f is a Python utility which sends a mix of benign and malformed queries to determine the GraphQL engine running behind the scenes.
 
-Different GraphQL servers respond uniquely to queries, mutations and subscriptions given the right payload, this makes it trivial to fingerprint and distinguish between the various GraphQL servers. (CWE: [CWE-200](#CWE-Reference))
+Specially crafted queries cause different GraphQL server implementations to respond uniquely to queries, mutations and subscriptions, this makes it trivial to fingerprint the backend engine and distinguish between the various GraphQL implementations. (CWE: [CWE-200](#CWE-Reference))
 
 # Detections
 graphw00f currently attempts to discover the following GraphQL engines:
