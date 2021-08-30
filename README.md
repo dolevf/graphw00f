@@ -116,7 +116,7 @@ python3 main.py -t http://127.0.0.1:5000/graphql
 ```
                                                                                                               
 # Support and Issues
-Any issues with graphw00f such as false/true positives, inaccurate detections, etc. please create a GitHub issue with environment details.
+Any issues with graphw00f such as false positives, inaccurate detections, bugs, etc. please create a GitHub issue with environment details.
 
 # Resources
 Want to learn more about GraphQL? head over to my other project and hack GraphQL away: [Damn Vulnerable GraphQL Application](https://github.com/dolevf/Damn-Vulnerable-GraphQL-Application/)
