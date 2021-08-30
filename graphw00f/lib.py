@@ -117,16 +117,7 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Syntax Error GraphQL (1:1)'):
       return True
-    
-    query = '''
-    query {
-      alias^:__typename
-    }  
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Unexpected character "^"'):
-      return True
-    
+
     return False
    
   def engine_hasura(self):
@@ -462,7 +453,7 @@ class GRAPHW00F:
     return False
 
   def engine_dianajl(self):
-    query = '''queryy { s }'''
+    query = '''queryy { __typename }'''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Syntax Error GraphQL request (1:1) Unexpected Name "queryy"'):
       return True
