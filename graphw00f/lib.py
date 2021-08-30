@@ -280,28 +280,19 @@ class GRAPHW00F:
     return False
 
   def engine_ariadne(self):
-    # query = '''
-    #   queryy { 
-    #     __typename 
-    #   }
-    # '''
-    # response = self.graph_query(self.url, payload=query)
-    # if error_contains(response, 'Syntax Error: Unexpected Name \'queryy\'.'):
-    #   return True
+    query = '''
+      query { 
+        __typename @abc 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Unknown directive \'@abc\'.') and 'data' not in response:
+      return True
 
     query = ''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'The query must be a string.'):
       return True
-
-    # query = '''
-    #   query { 
-    #     __schema 
-    #   }
-    # '''
-    # response = self.graph_query(self.url, payload=query)
-    # if error_contains(response, 'Field \'__schema\' of type \'__Schema!\' must have a selection of subfields.'):
-    #   return True
 
     return False
   
@@ -480,19 +471,11 @@ class GRAPHW00F:
 
   def engine_strawberry(self):
     query = '''
-      query @skip { 
+      query @deprecated { 
         __typename
       }'''
     response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive \'@skip\' may not be used on query.'):
-      return True
-
-    query = '''
-      query { 
-        __typename @deprecated
-      }'''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive \'@deprecated\' may not be used on field.'):
+    if error_contains(response, 'Directive \'@deprecated\' may not be used on query.') and 'data' in response:
       return True
 
     return False
