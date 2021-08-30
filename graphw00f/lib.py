@@ -73,6 +73,10 @@ class GRAPHW00F:
       return 'flutter'
     elif self.engine_dianajl():
       return 'dianajl'
+    elif self.engine_strawberry():
+      return 'strawberry'
+    elif self.engine_tartiflette():
+      return 'tartiflette'
     return None
   
   def graph_query(self, url, operation='query', payload={}):
@@ -267,28 +271,28 @@ class GRAPHW00F:
     return False
 
   def engine_ariadne(self):
-    query = '''
-      queryy { 
-        __typename 
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Syntax Error: Unexpected Name \'queryy\'.'):
-      return True
+    # query = '''
+    #   queryy { 
+    #     __typename 
+    #   }
+    # '''
+    # response = self.graph_query(self.url, payload=query)
+    # if error_contains(response, 'Syntax Error: Unexpected Name \'queryy\'.'):
+    #   return True
 
     query = ''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'The query must be a string.'):
       return True
 
-    query = '''
-      query { 
-        __schema 
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Field \'__schema\' of type \'__Schema!\' must have a selection of subfields.'):
-      return True
+    # query = '''
+    #   query { 
+    #     __schema 
+    #   }
+    # '''
+    # response = self.graph_query(self.url, payload=query)
+    # if error_contains(response, 'Field \'__schema\' of type \'__Schema!\' must have a selection of subfields.'):
+    #   return True
 
     return False
   

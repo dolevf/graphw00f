@@ -17,6 +17,7 @@ def error_contains(response, word_to_match):
       for i in response['errors']:
         err_message = i.get('message', '')
         if word_to_match in err_message:
+          print(word_to_match, err_message)
           return True
     return False
 
@@ -148,6 +149,18 @@ def get_engines():
       'url':'https://github.com/neomatrixcode/Diana.jl',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/dianajl.md',
       'technology':['Julia']
+    },
+    'strawberry':{
+      'name':'Strawberry - GraphQL for Python',
+      'url':'https://github.com/strawberry-graphql/strawberry',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/strawberry.md',
+      'technology':['Python']
+    },
+    'tartiflette':{
+      'name':'tartiflette - GraphQL for Python',
+      'url':'https://github.com/tartiflette/tartiflette',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/tartiflette.md',
+      'technology':['Python']
     }
   }
 
