@@ -4,7 +4,7 @@
  graphw00f - GraphQL Fingerprinting
 </h1>
 
-graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is a GraphQL fingerprinting tool. 
+graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is the GraphQL fingerprinting tool for GQL endpoints.
 
 # Table of Contents
 * [How does it work?](#how-does-it-work)
