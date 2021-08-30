@@ -113,7 +113,7 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Syntax Error GraphQL (1:1)'):
       return True
-
+    
     return False
    
   def engine_hasura(self):
@@ -126,17 +126,7 @@ class GRAPHW00F:
     if response.get('data'):
       if response.get('data', {}).get('__typename', '') == 'query_root':
         return True
-      
-    query = '''
-      query { 
-        __schema 
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'missing selection set for "__Schema"'):
-      return True
-
+   
     query = '''
      query { 
        aa 
@@ -155,6 +145,16 @@ class GRAPHW00F:
     if error_contains(response, 'directive "skip" is not allowed on a query'):
       return True
 
+    query = '''
+      query { 
+        __schema 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'missing selection set for "__Schema"'):
+      return True
+
     return False
     
   def engine_graphqlphp(self):
@@ -168,12 +168,12 @@ class GRAPHW00F:
       return True
     
     query = '''
-      subscription {
-        s 
+      query @deprecated {
+        __typename
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Schema is not configured for subscriptions.'):
+    if error_contains(response, 'Directive "deprecated" may not be used on "QUERY".'):
       return True
     
     return False
@@ -200,25 +200,21 @@ class GRAPHW00F:
       return True
 
     query = '''
-     query aa@aa {
-       __schema {
-           directives {
-             description
-           }
-        }
+      query { 
+       __typename {  
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive @aa is not defined'):
+    if error_contains(response, 'Parse error on "}" (RCURLY)'):
       return True
     
     query = '''
       query { 
-        __schema 
+        __typename @skip
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Field must have selections (field \'__schema\' returns __Schema but has no selections.'):
+    if error_contains(response, 'Directive \'skip\' is missing required arguments: if'):
       return True
     
     return False
@@ -234,22 +230,14 @@ class GRAPHW00F:
       return True
 
     query = '''
-    query {
-      __schema {
-        directives {
-          descriptio
-        }
+      query {
+        alias1:__typename @deprecated
       }
-    }
     '''
     response = self.graph_query(self.url, payload=query)
-    if response.get('errors'):
-      for i in response['errors']:
-        qp = i.get('queryPath', [])
-        matches = ['__schema', 'directives', 'descriptio'] 
-        if qp == matches:
-          return True
-  
+    if error_contains(response, 'Validation error of type UnknownDirective: Unknown directive deprecated @ \'__typename\''):
+      return True
+    
     return False
   
   def engine_graphqljava(self):    
@@ -280,6 +268,20 @@ class GRAPHW00F:
 
   def engine_ariadne(self):
     query = '''
+      queryy { 
+        __typename 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Syntax Error: Unexpected Name \'queryy\'.'):
+      return True
+
+    query = ''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'The query must be a string.'):
+      return True
+
+    query = '''
       query { 
         __schema 
       }
@@ -287,32 +289,18 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Field \'__schema\' of type \'__Schema!\' must have a selection of subfields.'):
       return True
-    
-    query = '''
-      subscription {
-        s
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Could not connect to websocket endpoint'):
-      return True
-    
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'The query must be a string.'):
-      return True
-        
+
     return False
   
   def engine_graphqlapiforwp(self):
     query = ''' 
      query {
-       alias1$1:__schema
+       alias1$1:__typename
      }
     '''
     response = self.graph_query(self.url, payload=query)
     if response.get('data'):
-      if response.get('data').get('alias1$1', '') == 'schema':
+      if response.get('data').get('alias1$1', '') == 'QueryRoot':
         return True    
 
     query = '''query aa#aa { __typename }'''
@@ -354,7 +342,7 @@ class GRAPHW00F:
     
     query = ''' 
      query {
-       alias1$1:__schema
+       alias1$1:__typename
      }
     '''
     response = self.graph_query(self.url, payload=query)
@@ -373,31 +361,56 @@ class GRAPHW00F:
 
   def engine_gqlgen(self):    
     query = '''
-      query @aa@aa  {
-      __schema 
+      query  {
+      __typename { 
     }
     '''
     response = self.graph_query(self.url, payload=query)
     
-    if error_contains(response, 'The directive "aa" can only be used once at this location.'):
-      return True
+    if error_contains(response, 'expected at least one definition'):
+      return True   
 
-  def engine_graphqlgo(self):
-    query = ''' 
-     query @skip {
-       abc
-     }
+    query = '''
+      query  {
+      alias^_:__typename { 
+    }
     '''
     response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive "skip" may not be used on QUERY. Directive "@skip" argument "if" of type "Boolean!" is required but not provided'):
-      return True
     
+    if error_contains(response, 'Expected Name, found <Invalid>'):
+      return True
+
+    return False
+
+  def engine_graphqlgo(self):    
+    query = '''
+      query { 
+      __typename {
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    
+    if error_contains(response, 'Unexpected empty IN'):
+      return True
+
     query = ''
     response = self.graph_query(self.url, payload=query)
     
     if error_contains(response, 'Must provide an operation.'):
       return True
 
+    query = '''
+      query {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    try:
+      if response['data']['__typename'] == 'RootQuery':
+        return True
+    except KeyError:
+      pass
+    
     return False
 
   def engine_juniper(self):
@@ -434,7 +447,7 @@ class GRAPHW00F:
 
   def engine_flutter(self):
     query = ''' 
-      queryy {
+      query {
         __typename @deprecated
     }
     '''
@@ -445,9 +458,70 @@ class GRAPHW00F:
     return False
 
   def engine_dianajl(self):
-    query = '''query a# { __typename }'''
+    query = '''queryy { s }'''
     response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'found EOF'):
+    if error_contains(response, 'Syntax Error GraphQL request (1:1) Unexpected Name "queryy"'):
+      return True
+    
+    return False
+
+  def engine_strawberry(self):
+    query = '''
+      query @skip { 
+        __typename
+      }'''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Directive \'@skip\' may not be used on query.'):
+      return True
+
+    query = '''
+      query { 
+        __typename @deprecated
+      }'''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Directive \'@deprecated\' may not be used on field.'):
+      return True
+
+    return False
+
+  def engine_tartiflette(self):
+    query = '''
+      query @a { __typename }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Unknow Directive < @a >.'):
+      return True
+
+    query = '''
+      query @skip { __typename }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Missing mandatory argument < if > in directive < @skip >.'):
+      return True
+
+    query = '''
+      query { graphwoof }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Field graphwoof doesn\'t exist on Query'):
+      return True
+
+    query = '''
+      query { 
+        __typename @deprecated
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Directive < @deprecated > is not used in a valid location.'):
+      return True
+
+    query = '''
+      queryy { 
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'syntax error, unexpected IDENTIFIER'):
       return True
     
     return False
