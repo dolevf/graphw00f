@@ -47,8 +47,9 @@ def draw_art():
                     |   Node Z   |                      
                     +------------+    
 
-                graphw00f - v{version}
+                graphw00f - v{version} 
           The fingerprinting tool for GraphQL
+           Dolev Farhi <dolev@lethalbit.com>
   '''.format(version=VERSION)
 
 def get_engines():
