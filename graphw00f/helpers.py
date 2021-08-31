@@ -24,13 +24,7 @@ def get_time():
   return datetime.datetime.now().strftime('%Y-%m-%d')
 
 def draw_art():
-  return '''
-+-------------------+           +--------------------+
-|      GRAPHQL      |           |     FINGERPRINT    |
-+-------------------+           +--------------------+
-                  **              **                  
-                    ***        ***                    
-                       **    **                       
+  return '''               
                 +-------------------+                 
                 |     graphw00f     |                 
                 +-------------------+                 
