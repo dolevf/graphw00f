@@ -1,5 +1,5 @@
 <h1 align="center">
- <img src="https://github.com/dolevf/graphw00f/blob/main/static/graphw00f.png?raw=true" width="alt="graphw00f"/>
+ <img src="https://github.com/dolevf/graphw00f/blob/main/static/graphw00f.png?raw=true" height="50%" width="50%" alt="graphw00f"/>
  <br>
  graphw00f - GraphQL Server Fingerprinting
 </h1>
