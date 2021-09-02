@@ -1,15 +1,15 @@
 <h1 align="center">
  <img src="https://github.com/dolevf/graphw00f/blob/main/static/graphw00f.png?raw=true" height="50%" width="50%" alt="graphw00f"/>
  <br>
- graphw00f - GraphQL Server Fingerprinting
-
 </h1>
+
 <h5 align="center">
 <small>Credits to <a href="https://github.com/nicholasaleks">Nick Aleks </a>for the logo!</small>
-</h1>
+</h5>
 
-# Intro
-graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is the GraphQL fingerprinting tool for GQL endpoints.
+<h1 align="center">
+ graphw00f - GraphQL Server Fingerprinting
+</h1>
 
 # Table of Contents
 * [How does it work?](#how-does-it-work)
@@ -22,7 +22,7 @@ graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is 
 
 
 # How does it work?
-graphw00f is a Python utility which sends a mix of benign and malformed queries to determine the GraphQL engine running behind the scenes. 
+graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is the GraphQL fingerprinting tool for GQL endpoints, it sends a mix of benign and malformed queries to determine the GraphQL engine running behind the scenes. 
 graphw00f will provide insights into what security defences each technology provides out of the box, and whether they are on or off by default.
 
 Specially crafted queries cause different GraphQL server implementations to respond uniquely to queries, mutations and subscriptions, this makes it trivial to fingerprint the backend engine and distinguish between the various GraphQL implementations. (CWE: [CWE-200](#CWE-Reference))
