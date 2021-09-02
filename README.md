@@ -3,6 +3,7 @@
  <br>
  graphw00f - GraphQL Server Fingerprinting
 </h1>
+<center><small>Credits to <a href="https://github.com/nicholasaleks">Nick Aleks </a></small> for the logo!</center>
 
 graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is the GraphQL fingerprinting tool for GQL endpoints.
 
