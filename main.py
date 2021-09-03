@@ -38,11 +38,11 @@ def main():
 
     if options.list:
       print(draw_art())
-      for k, v in graphw00f.helpers.get_engines().items():
-        print('{key}: {name} ({language})'.format(
+      for k, v in get_engines().items():
+        print('{key}: {name} ({technology})'.format(
                                             key=k,
                                             name=v['name'],
-                                            language=', '.join(v['language']))
+                                            technology=', '.join(v['technology']))
                                            )
       sys.exit(0)
   
