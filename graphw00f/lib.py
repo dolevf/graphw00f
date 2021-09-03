@@ -243,7 +243,7 @@ class GRAPHW00F:
       return True
     
     return False
-  
+
   def engine_graphqljava(self):    
     query = '''
      queryy  { 
