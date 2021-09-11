@@ -8,8 +8,10 @@ from graphw00f.helpers import (
   draw_art, 
   get_engines, 
   user_confirmed,
+  possible_graphql_paths,
   bcolors
 )
+
 from time import sleep
 from urllib.parse import urlparse
 from optparse import OptionParser
@@ -17,17 +19,18 @@ from optparse import OptionParser
 from version import VERSION
 from graphw00f.lib import (
   GRAPHW00F, 
-  GraphQLDetectionFailed, 
-  GraphQLUnknownState
+  GraphQLDetectionFailed
 )
 
 
 def main():
-    parser = OptionParser(usage='%prog -t http://example.com/graphql')
+    parser = OptionParser(usage='%prog -t http://example.com/graphql -f')
     parser.add_option('-r', '--noredirect', action='store_false', dest='followredirect', default=True, 
                      
                             help='Do not follow redirections given by 3xx responses')
     parser.add_option('-t', '--target', dest='url', help='target url with the path')
+    parser.add_option('-f', '--fingerprint', dest='fingerprint', default=False, action='store_true', help='fingerprint mode')
+    parser.add_option('-d', '--detect', dest='detect', default=False, action='store_true', help='detect mode (without fingerprinting)')
     parser.add_option('-o', '--output-file', dest='output_file', 
                             help='Output results to a file (CSV)', default=None)
     parser.add_option('-l', '--list', dest='list', action='store_true', default=False, 
@@ -54,6 +57,13 @@ def main():
       parser.print_help()
       sys.exit(1)
     
+    if not options.detect and not options.fingerprint:
+      parser.print_help()
+      sys.exit(1)
+    
+    g = GRAPHW00F(follow_redirects=options.followredirect,
+                  headers=conf.HEADERS,
+                  cookies=conf.COOKIES)
     url = options.url
     url_path = urlparse(url).path
     url_scheme = urlparse(url).scheme
@@ -69,19 +79,30 @@ def main():
       print('url {url} does not seem right.'.format(url=url))
       sys.exit(1)
 
+    if options.detect:
+      for possible_path in possible_graphql_paths():
+        target = url + possible_path
+        print('[*] Checking {}'.format(target))
+        try:
+          g.check(target)
+          print('[*] Found GraphQL at {}'.format(target))
+          print('[*] You can now try and fingerprint GraphQL using: {} -t {}'.format(sys.argv[0], target))
+          sys.exit(0)
+        except GraphQLDetectionFailed:
+          continue
+      print('[x] Could not find GraphQL anywhere.')
+      sys.exit(1)
+
     if not url_path:
       print('[*] No URL path was provided.')
       print('[*[ are you sure you want to fingerprint the server without a path? [y/n]')
       choice = input().lower()
       if not user_confirmed(choice):
+        print('_o/')
         sys.exit(1)
 
-    
     print('[*] Checking if GraphQL is available at {url}...'.format(url=url))
     
-    g = GRAPHW00F(follow_redirects=options.followredirect,
-                  headers=conf.HEADERS, 
-                  cookies=conf.COOKIES)
     detected = None
     try:
       if g.check(url):
@@ -93,10 +114,7 @@ def main():
         if not user_confirmed(choice):
           print('Quitting.')
           sys.exit(1)
-    except GraphQLUnknownState:
-      print('Something went wrong.')
-      sys.exit(1)
-
+    
     print('[*] Attempting to fingerprint...')
     result = g.execute(url)
     

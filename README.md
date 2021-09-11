@@ -69,12 +69,14 @@ Each fingerprinted technology (e.g. Graphene, Ariadne, ...) has an associated do
 `python3 main.py -h`
 
 ```
-Usage: main.py -h
+Usage: main.py -t http://example.com/graphql -f
 
 Options:
   -h, --help            show this help message and exit
   -r, --noredirect      Do not follow redirections given by 3xx responses
   -t URL, --target=URL  target url with the path
+  -f, --fingerprint     fingerprint mode
+  -d, --detect          detect mode (without fingerprinting)
   -o OUTPUT_FILE, --output-file=OUTPUT_FILE
                         Output results to a file (CSV)
   -l, --list            List all GraphQL technologies graphw00f is able to
@@ -84,7 +86,7 @@ Options:
 
 # Example
 ```
-python3 main.py -t http://127.0.0.1:5000/graphql
+python3 main.py -t https://demo.hypergraphql.org:8484/graphql -f
 
                 +-------------------+                 
                 |     graphw00f     |                 
@@ -102,8 +104,9 @@ python3 main.py -t http://127.0.0.1:5000/graphql
                     |   Node Z   |                      
                     +------------+    
 
-                graphw00f - v1.0.0
+                graphw00f - v1.0.3
           The fingerprinting tool for GraphQL
+           Dolev Farhi <dolev@lethalbit.com>
   
 [*] Checking if GraphQL is available at https://demo.hypergraphql.org:8484/graphql...
 [*] Found GraphQL...

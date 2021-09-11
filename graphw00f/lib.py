@@ -7,9 +7,6 @@ requests.packages.urllib3.disable_warnings()
 class GraphQLDetectionFailed(Exception):
   pass
 
-class GraphQLUnknownState(Exception):
-  pass
-
 class GraphQLError(Exception):
   pass
 
@@ -37,7 +34,6 @@ class GRAPHW00F:
       return True
     else: 
       raise GraphQLDetectionFailed
-    raise GraphQLUnknownState
 
   def execute(self, url):    
     self.url = url

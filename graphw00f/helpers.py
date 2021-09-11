@@ -46,6 +46,23 @@ def draw_art():
            Dolev Farhi <dolev@lethalbit.com>
   '''.format(version=VERSION)
 
+def possible_graphql_paths():
+  return [
+    '/graphql',
+    '/graphiql',
+    '/v1/graphql',
+    '/v2/graphql',
+    '/v3/graphql',
+    '/v1/graphiql',
+    '/v2/graphiql',
+    '/v3/graphiql',
+    '/api/graphql',
+    '/api/graphiql',
+    '/console',
+    '/playground',
+    '/gql'
+  ]
+
 def get_engines():
   return {
     'apollo':{
