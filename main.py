@@ -41,9 +41,11 @@ def main():
 
     if options.list:
       print(draw_art())
+      count = 0
       for k, v in get_engines().items():
-        print('{key}: {name} ({technology})'.format(
-                                            key=k,
+        count += 1
+        print('{index}. {name} ({technology})'.format(
+                                            index=count,
                                             name=v['name'],
                                             technology=', '.join(v['technology']))
                                            )
