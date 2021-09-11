@@ -85,8 +85,8 @@ def main():
         print('[*] Checking {}'.format(target))
         try:
           g.check(target)
-          print('[*] Found GraphQL at {}'.format(target))
-          print('[*] You can now try and fingerprint GraphQL using: {} -t {}'.format(sys.argv[0], target))
+          print('[!] Found GraphQL at {}'.format(target))
+          print('[!] You can now try and fingerprint GraphQL using: {} -t {}'.format(sys.argv[0], target))
           sys.exit(0)
         except GraphQLDetectionFailed:
           continue
@@ -106,7 +106,7 @@ def main():
     detected = None
     try:
       if g.check(url):
-        print('[*] Found GraphQL...')
+        print('[!] Found GraphQL...')
     except GraphQLDetectionFailed:
         print(bcolors.FAIL + '[x] Could not determine existence of GraphQL (GraphQLDetectionFailed)' + bcolors.ENDC)
         print('[*] Continue anyway? [y/n]'.format(url=url))
