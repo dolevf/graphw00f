@@ -18,6 +18,8 @@
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
 * [Example Usage](#example)
+  * [Fingerprinting GraphQL](#fingerprinting-graphql)
+  * [Detecting & Fingerprinting GraphQL](#detecting-and-fingerprinting-graphql)
 * [Support & Issues](#support-and-issues)
 * [Resources](#resources)
 
@@ -85,7 +87,8 @@ Options:
   -v, --version         Print out the current version and exit.
 ```
 
-# Example - Fingerprinting GraphQL
+# Example
+## Fingerprinting GraphQL
 This is an example how to fingerprint (`-f`) an endpoint where GraphQL's location is known ahead of time (`/graphql`)
 
 ```
@@ -121,7 +124,7 @@ python3 main.py -f -t https://demo.hypergraphql.org:8484/graphql
 [*] Completed.
 ```
 
-# Example - Detecting & Fingerprinting GraphQL
+## Detecting and Fingerprinting GraphQL
 This is an example how graphw00f can detect (`-d`) where GraphQL lives and then execute the fingerprinting process (`-f`).
 
 ```
