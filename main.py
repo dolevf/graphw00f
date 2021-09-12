@@ -24,7 +24,7 @@ from graphw00f.lib import (
 
 
 def main():
-    parser = OptionParser(usage='%prog -d -f -t http://example.com/graphql')
+    parser = OptionParser(usage='%prog -d -f -t http://example.com')
     parser.add_option('-r', '--noredirect', action='store_false', dest='followredirect', default=True, 
                      
                             help='Do not follow redirections given by 3xx responses')
