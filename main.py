@@ -24,7 +24,7 @@ from graphw00f.lib import (
 
 
 def main():
-    parser = OptionParser(usage='%prog -t http://example.com/graphql -f')
+    parser = OptionParser(usage='%prog -d -f -t http://example.com/graphql')
     parser.add_option('-r', '--noredirect', action='store_false', dest='followredirect', default=True, 
                      
                             help='Do not follow redirections given by 3xx responses')
@@ -67,10 +67,9 @@ def main():
                   headers=conf.HEADERS,
                   cookies=conf.COOKIES)
     url = options.url
-    url_path = urlparse(url).path
     url_scheme = urlparse(url).scheme
     url_netloc = urlparse(url).netloc
-    
+    detected = False
     print(draw_art())
 
     if url_scheme not in ('http', 'https'):
@@ -88,35 +87,32 @@ def main():
         try:
           g.check(target)
           print('[!] Found GraphQL at {}'.format(target))
-          print('[!] You can now try and fingerprint GraphQL using: {} -t {}'.format(sys.argv[0], target))
-          sys.exit(0)
+          url = target
+          detected = True
+          
+          if not options.fingerprint:
+            sys.exit(0)
+          
+          break
         except GraphQLDetectionFailed:
           continue
-      print('[x] Could not find GraphQL anywhere.')
-      sys.exit(1)
-
-    if not url_path:
-      print('[*] No URL path was provided.')
-      print('[*[ are you sure you want to fingerprint the server without a path? [y/n]')
-      choice = input().lower()
-      if not user_confirmed(choice):
-        print('_o/')
+      if not detected:
+        print('[x] Could not find GraphQL anywhere.')
         sys.exit(1)
+    else:
+      print('[*] Checking if GraphQL is available at {url}...'.format(url=url))  
+      fingerprint = None
+      try:
+        if g.check(url):
+          print('[!] Found GraphQL.')
+      except GraphQLDetectionFailed:
+          print(bcolors.FAIL + '[x] Could not determine the existence of GraphQL (Error: GraphQLDetectionFailed)' + bcolors.ENDC)
+          print('[*] Continue anyway? [y/n]'.format(url=url))
+          choice = input().lower()
+          if not user_confirmed(choice):
+            print('Quitting.')
+            sys.exit(1)
 
-    print('[*] Checking if GraphQL is available at {url}...'.format(url=url))
-    
-    detected = None
-    try:
-      if g.check(url):
-        print('[!] Found GraphQL...')
-    except GraphQLDetectionFailed:
-        print(bcolors.FAIL + '[x] Could not determine existence of GraphQL (GraphQLDetectionFailed)' + bcolors.ENDC)
-        print('[*] Continue anyway? [y/n]'.format(url=url))
-        choice = input().lower()
-        if not user_confirmed(choice):
-          print('Quitting.')
-          sys.exit(1)
-    
     print('[*] Attempting to fingerprint...')
     result = g.execute(url)
     
@@ -125,7 +121,7 @@ def main():
       url = get_engines()[result]['url']
       ref = get_engines()[result]['ref']
       technologies = ', '.join(get_engines()[result]['technology'])
-      detected = name
+      fingerprint = name
       print(bcolors.OKGREEN + '[*] Discovered GraphQL Engine: ({})'.format(name))
       print('[!] Attack Surface Matrix: {}'.format(ref))
       print('[!] Technologies: {}'.format(technologies))
@@ -136,7 +132,7 @@ def main():
     if options.output_file:
       f = open(options.output_file, 'w')
       f.write('url,detected_engine,timestamp\n')
-      f.write('{},{},{}\n'.format(url_netloc, detected, get_time()))
+      f.write('{},{},{}\n'.format(url_netloc, fingerprint, get_time()))
       f.close()
     
     print(bcolors.ENDC + '[*] Completed.')
