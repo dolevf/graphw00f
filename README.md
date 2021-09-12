@@ -17,6 +17,9 @@
 * [GraphQL Technologies Defence Matrices](#graphql-technologies-defence-matrices)
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
+* [Example Usage](#example)
+  * [Fingerprinting GraphQL](#fingerprinting-graphql)
+  * [Detecting & Fingerprinting GraphQL](#detecting-and-fingerprinting-graphql)
 * [Support & Issues](#support-and-issues)
 * [Resources](#resources)
 
@@ -76,7 +79,7 @@ Options:
   -r, --noredirect      Do not follow redirections given by 3xx responses
   -t URL, --target=URL  target url with the path
   -f, --fingerprint     fingerprint mode
-  -d, --detect          detect mode (without fingerprinting)
+  -d, --detect          detect mode
   -o OUTPUT_FILE, --output-file=OUTPUT_FILE
                         Output results to a file (CSV)
   -l, --list            List all GraphQL technologies graphw00f is able to
@@ -85,8 +88,11 @@ Options:
 ```
 
 # Example
+## Fingerprinting GraphQL
+This is an example how to fingerprint (`-f`) an endpoint where GraphQL's location is known ahead of time (`/graphql`)
+
 ```
-python3 main.py -t https://demo.hypergraphql.org:8484/graphql -f
+python3 main.py -f -t https://demo.hypergraphql.org:8484/graphql
 
                 +-------------------+                 
                 |     graphw00f     |                 
@@ -104,7 +110,7 @@ python3 main.py -t https://demo.hypergraphql.org:8484/graphql -f
                     |   Node Z   |                      
                     +------------+    
 
-                graphw00f - v1.0.3
+                graphw00f - v1.0.4
           The fingerprinting tool for GraphQL
            Dolev Farhi <dolev@lethalbit.com>
   
@@ -115,6 +121,42 @@ python3 main.py -t https://demo.hypergraphql.org:8484/graphql -f
 [!] Attack Surface Matrix: https://github.com/dolevf/graphw00f/blob/main/docs/hypergraphql.md
 [!] Technologies: Java
 [!] Homepage: https://www.hypergraphql.org
+[*] Completed.
+```
+
+## Detecting and Fingerprinting GraphQL
+This is an example how graphw00f can detect (`-d`) where GraphQL lives and then execute the fingerprinting process (`-f`).
+
+```
+python3 main.py -f -d -t http://localhost:5000 
+               
+                +-------------------+                 
+                |     graphw00f     |                 
+                +-------------------+                 
+                  ***            ***                  
+                **                  ***               
+              **                       **             
+    +--------------+              +--------------+       
+    |    Node X    |              |    Node Y    |       
+    +--------------+              +--------------+     
+                  ***            ***                  
+                     **        **                     
+                       **    **                       
+                    +------------+                      
+                    |   Node Z   |                      
+                    +------------+    
+
+                graphw00f - v1.0.4 
+          The fingerprinting tool for GraphQL
+           Dolev Farhi <dolev@lethalbit.com>
+  
+[*] Checking http://dvga.example.local:5000/graphql
+[!] Found GraphQL at http://dvga.example.local:5000/graphql
+[*] Attempting to fingerprint...
+[*] Discovered GraphQL Engine: (Graphene)
+[!] Attack Surface Matrix: https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md
+[!] Technologies: Python
+[!] Homepage: https://graphene-python.org
 [*] Completed.
 ```
                                                                                                               
