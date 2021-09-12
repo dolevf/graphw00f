@@ -84,8 +84,6 @@ class GRAPHW00F:
                              allow_redirects=self.follow_redirects,
                              json={operation:payload})
       return response.json()
-    except GraphQLError:
-      return {}
     except:
       return {}
 
