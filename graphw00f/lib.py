@@ -13,11 +13,13 @@ class GraphQLError(Exception):
 class GRAPHW00F:
   def __init__(self, headers,
                      cookies,
+                     timeout,
                      follow_redirects=False):
     self.url = 'http://example.com'
     self.cookies = cookies
     self.headers = headers
-    self.follow_redirects = follow_redirects
+    self.follow_redirects = follow_redirects,
+    self.timeout = timeout
   
   def check(self, url):
     query = '''
@@ -82,6 +84,7 @@ class GRAPHW00F:
                              cookies=self.cookies,
                              verify=False,
                              allow_redirects=self.follow_redirects,
+                             timeout=self.timeout,
                              json={operation:payload})
       return response.json()
     except:

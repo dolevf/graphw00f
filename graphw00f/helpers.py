@@ -48,6 +48,7 @@ def draw_art():
 
 def possible_graphql_paths():
   return [
+    '/',
     '/graphql',
     '/graphiql',
     '/v1/graphql',
@@ -60,7 +61,8 @@ def possible_graphql_paths():
     '/api/graphiql',
     '/console',
     '/playground',
-    '/gql'
+    '/gql',
+    '/index.php?graphql'
   ]
 
 def get_engines():
