@@ -80,6 +80,8 @@ Options:
   -t URL, --target=URL  target url with the path
   -f, --fingerprint     fingerprint mode
   -d, --detect          detect mode
+  -T TIMEOUT, --timeout=TIMEOUT
+                        timeout
   -o OUTPUT_FILE, --output-file=OUTPUT_FILE
                         Output results to a file (CSV)
   -l, --list            List all GraphQL technologies graphw00f is able to
