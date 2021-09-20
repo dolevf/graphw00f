@@ -31,7 +31,7 @@ def main():
     parser.add_option('-t', '--target', dest='url', help='target url with the path')
     parser.add_option('-f', '--fingerprint', dest='fingerprint', default=False, action='store_true', help='fingerprint mode')
     parser.add_option('-d', '--detect', dest='detect', default=False, action='store_true', help='detect mode')
-    parser.add_option('-T', '--timeout', dest='timeout', default=10, help='timeout')
+    parser.add_option('-T', '--timeout', dest='timeout', default=10, help='Request timeout in seconds')
     parser.add_option('-o', '--output-file', dest='output_file', 
                             help='Output results to a file (CSV)', default=None)
     parser.add_option('-l', '--list', dest='list', action='store_true', default=False, 

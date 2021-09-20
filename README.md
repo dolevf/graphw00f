@@ -81,7 +81,7 @@ Options:
   -f, --fingerprint     fingerprint mode
   -d, --detect          detect mode
   -T TIMEOUT, --timeout=TIMEOUT
-                        timeout
+                        Request timeout in seconds
   -o OUTPUT_FILE, --output-file=OUTPUT_FILE
                         Output results to a file (CSV)
   -l, --list            List all GraphQL technologies graphw00f is able to
