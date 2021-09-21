@@ -20,7 +20,7 @@ class GRAPHW00F:
     self.headers = headers
     self.follow_redirects = follow_redirects,
     self.timeout = timeout
-  
+
   def check(self, url):
     query = '''
       query {
@@ -34,10 +34,10 @@ class GRAPHW00F:
       return True
     elif response.get('data'):
       return True
-    else: 
+    else:
       raise GraphQLDetectionFailed
 
-  def execute(self, url):    
+  def execute(self, url):
     self.url = url
     if self.engine_graphene():
       return 'graphene'
@@ -76,7 +76,7 @@ class GRAPHW00F:
     elif self.engine_tartiflette():
       return 'tartiflette'
     return None
-  
+
   def graph_query(self, url, operation='query', payload={}):
     try:
       response = requests.post(url, 
@@ -91,7 +91,7 @@ class GRAPHW00F:
       return {}
 
   def engine_apollo(self):
-    query = ''' 
+    query = '''
       query @skip {
         __typename
       }
@@ -100,7 +100,7 @@ class GRAPHW00F:
     if error_contains(response, 'Directive "@skip" argument "if" of type "Boolean!" is required, but it was not provided.'):
       return True
 
-    query = ''' 
+    query = '''
       query @deprecated {
         __typename
       }
@@ -108,15 +108,17 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Directive "@deprecated" may not be used on QUERY.'):
       return True
-  
-  def engine_graphene(self):      
+
+    return False
+
+  def engine_graphene(self):
     query = '''aaa'''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Syntax Error GraphQL (1:1)'):
       return True
 
     return False
-   
+
   def engine_hasura(self):
     query = '''
       query @cached {
@@ -127,16 +129,15 @@ class GRAPHW00F:
     if response.get('data'):
       if response.get('data', {}).get('__typename', '') == 'query_root':
         return True
-   
     query = '''
-     query { 
-       aa 
+     query {
+       aa
       }
     '''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'field "aaa" not found in type: \'query_root\''):
       return True
-    
+
     query = '''
       query @skip {
         __typename
@@ -147,8 +148,8 @@ class GRAPHW00F:
       return True
 
     query = '''
-      query { 
-        __schema 
+      query {
+        __schema
       }
     '''
     response = self.graph_query(self.url, payload=query)
@@ -157,9 +158,9 @@ class GRAPHW00F:
       return True
 
     return False
-    
+
   def engine_graphqlphp(self):
-    query = ''' 
+    query = '''
       query ! {
         __typename
       }
@@ -167,7 +168,7 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Syntax Error: Cannot parse the unexpected character "?".'):
       return True
-    
+
     query = '''
       query @deprecated {
         __typename
@@ -176,9 +177,9 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Directive "deprecated" may not be used on "QUERY".'):
       return True
-    
+
     return False
-        
+
   def engine_ruby(self):
     query = '''
      query @skip {
@@ -190,7 +191,7 @@ class GRAPHW00F:
       return True
     elif error_contains(response, 'Directive \'skip\' is missing required arguments: if'):
       return True
-    
+
     query = '''
      query @deprecated {
        __typename
@@ -201,29 +202,29 @@ class GRAPHW00F:
       return True
 
     query = '''
-      query { 
-       __typename {  
+      query {
+       __typename {
       }
     '''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Parse error on "}" (RCURLY)'):
       return True
-    
+
     query = '''
-      query { 
+      query {
         __typename @skip
       }
     '''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Directive \'skip\' is missing required arguments: if'):
       return True
-    
+
     return False
-    
-  def engine_hypergraphql(self):    
+
+  def engine_hypergraphql(self):
     query = '''
-     zzz { 
-        __typename 
+     zzz {
+        __typename
       }
     '''
     response = self.graph_query(self.url, payload=query)
@@ -238,13 +239,13 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Validation error of type UnknownDirective: Unknown directive deprecated @ \'__typename\''):
       return True
-    
+
     return False
 
-  def engine_graphqljava(self):    
+  def engine_graphqljava(self):
     query = '''
-     queryy  { 
-        __typename 
+     queryy  {
+        __typename
       }
     '''
     response = self.graph_query(self.url, payload=query)
@@ -252,8 +253,8 @@ class GRAPHW00F:
       return True
 
     query = '''
-     query @aaa@aaa { 
-        __typename 
+     query @aaa@aaa {
+        __typename
       }
     '''
     response = self.graph_query(self.url, payload=query)
@@ -269,8 +270,8 @@ class GRAPHW00F:
 
   def engine_ariadne(self):
     query = '''
-      query { 
-        __typename @abc 
+      query {
+        __typename @abc
       }
     '''
     response = self.graph_query(self.url, payload=query)
@@ -283,9 +284,9 @@ class GRAPHW00F:
       return True
 
     return False
-  
+
   def engine_graphqlapiforwp(self):
-    query = ''' 
+    query = '''
      query {
        alias1$1:__typename
      }
@@ -293,15 +294,15 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if response.get('data'):
       if response.get('data').get('alias1$1', '') == 'QueryRoot':
-        return True    
+        return True
 
     query = '''query aa#aa { __typename }'''
     response = self.graph_query(self.url, payload=query)
-    
+
     if error_contains(response, 'Unexpected token "END"'):
       return True
-    
-    query = ''' 
+
+    query = '''
       query @skip {
         __typename
       }
@@ -310,7 +311,7 @@ class GRAPHW00F:
     if error_contains(response, 'Argument \'if\' cannot be empty, so directive \'skip\' has been ignored'):
       return True
 
-    query = ''' 
+    query = '''
       query @doesnotexist {
         __typename
       }
@@ -331,8 +332,8 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'GraphQL Request must include at least one of those two parameters: "query" or "queryId"'):
       return True
-    
-    query = ''' 
+
+    query = '''
      query {
        alias1$1:__typename
      }
@@ -340,7 +341,7 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if not error_contains(response, 'Syntax Error: Expected Name, found $'):
       return False
-    
+
     try:
       debug_msg = response['extensions']['debug'][0]
       if debug_msg['type'] == 'DEBUG_LOGS_INACTIVE' or \
@@ -351,43 +352,43 @@ class GRAPHW00F:
 
     return False
 
-  def engine_gqlgen(self):    
+  def engine_gqlgen(self):
     query = '''
       query  {
-      __typename { 
+      __typename {
     }
     '''
     response = self.graph_query(self.url, payload=query)
-    
+
     if error_contains(response, 'expected at least one definition'):
-      return True   
+      return True
 
     query = '''
       query  {
-      alias^_:__typename { 
+      alias^_:__typename {
     }
     '''
     response = self.graph_query(self.url, payload=query)
-    
+
     if error_contains(response, 'Expected Name, found <Invalid>'):
       return True
 
     return False
 
-  def engine_graphqlgo(self):    
+  def engine_graphqlgo(self):
     query = '''
-      query { 
+      query {
       __typename {
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    
+
     if error_contains(response, 'Unexpected empty IN'):
       return True
 
     query = ''
     response = self.graph_query(self.url, payload=query)
-    
+
     if error_contains(response, 'Must provide an operation.'):
       return True
 
@@ -402,11 +403,11 @@ class GRAPHW00F:
         return True
     except KeyError:
       pass
-    
+
     return False
 
   def engine_juniper(self):
-    query = ''' 
+    query = '''
       queryy {
         __typename
     }
@@ -414,18 +415,17 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Unexpected "queryy"'):
       return True
-    
 
     query = ''
     response = self.graph_query(self.url, payload=query)
-    
+
     if error_contains(response, 'Unexpected end of input'):
       return True
-    
+
     return False
 
   def engine_sangria(self):
-    query = ''' 
+    query = '''
       queryy {
         __typename
     }
@@ -434,11 +434,11 @@ class GRAPHW00F:
     syntaxError = response.get('syntaxError', '')
     if 'Syntax error while parsing GraphQL query. Invalid input "queryy", expected ExecutableDefinition or TypeSystemDefinition' in syntaxError:
       return True
-    
+
     return False
 
   def engine_flutter(self):
-    query = ''' 
+    query = '''
       query {
         __typename @deprecated
     }
@@ -446,7 +446,7 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Directive "deprecated" may not be used on FIELD.'):
       return True
-    
+
     return False
 
   def engine_dianajl(self):
@@ -454,12 +454,12 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'Syntax Error GraphQL request (1:1) Unexpected Name "queryy"'):
       return True
-    
+
     return False
 
   def engine_strawberry(self):
     query = '''
-      query @deprecated { 
+      query @deprecated {
         __typename
       }'''
     response = self.graph_query(self.url, payload=query)
@@ -491,7 +491,7 @@ class GRAPHW00F:
       return True
 
     query = '''
-      query { 
+      query {
         __typename @deprecated
       }
     '''
@@ -500,12 +500,12 @@ class GRAPHW00F:
       return True
 
     query = '''
-      queryy { 
+      queryy {
         __typename
       }
     '''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'syntax error, unexpected IDENTIFIER'):
       return True
-    
+
     return False
