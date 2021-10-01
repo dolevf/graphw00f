@@ -520,11 +520,8 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    try:
-      if response.get('data', {}).get('__typename', '') == 'Query':
-        return True
-    except AttributeError:
-      pass
+    if response.get('data', {}).get('__typename', '') == 'Query':
+      return True
 
     query = '''
       query {
