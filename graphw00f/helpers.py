@@ -24,24 +24,24 @@ def get_time():
   return datetime.datetime.now().strftime('%Y-%m-%d')
 
 def draw_art():
-  return '''               
-                +-------------------+                 
-                |     graphw00f     |                 
-                +-------------------+                 
-                  ***            ***                  
-                **                  ***               
-              **                       **             
-    +--------------+              +--------------+       
-    |    Node X    |              |    Node Y    |       
-    +--------------+              +--------------+     
-                  ***            ***                  
-                     **        **                     
-                       **    **                       
-                    +------------+                      
-                    |   Node Z   |                      
-                    +------------+    
+  return '''
+                +-------------------+
+                |     graphw00f     |
+                +-------------------+
+                  ***            ***
+                **                  ***
+              **                       **
+    +--------------+              +--------------+
+    |    Node X    |              |    Node Y    |
+    +--------------+              +--------------+
+                  ***            ***
+                     **        **
+                       **    **
+                    +------------+
+                    |   Node Z   |
+                    +------------+
 
-                graphw00f - v{version} 
+                graphw00f - v{version}
           The fingerprinting tool for GraphQL
            Dolev Farhi <dolev@lethalbit.com>
   '''.format(version=VERSION)
@@ -174,6 +174,12 @@ def get_engines():
       'url':'https://github.com/tartiflette/tartiflette',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/tartiflette.md',
       'technology':['Python']
+    },
+    'dgraph':{
+      'name':'Dgraph',
+      'url':'https://dgraph.io/',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/dgraph.md',
+      'technology':['JavaScript']
     }
   }
 

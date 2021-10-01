@@ -39,7 +39,9 @@ class GRAPHW00F:
 
   def execute(self, url):
     self.url = url
-    if self.engine_graphene():
+    if self.engine_dgraph():
+      return 'dgraph'
+    elif self.engine_graphene():
       return 'graphene'
     elif self.engine_ariadne():
       return 'ariadne'
@@ -75,6 +77,7 @@ class GRAPHW00F:
       return 'strawberry'
     elif self.engine_tartiflette():
       return 'tartiflette'
+
     return None
 
   def graph_query(self, url, operation='query', payload={}):
@@ -506,6 +509,18 @@ class GRAPHW00F:
     '''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'syntax error, unexpected IDENTIFIER'):
+      return True
+
+    return False
+
+  def engine_dgraph(self):
+    query = '''
+      query {
+        __typename @cascade
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if response.get('data', '').get('__typename', '') == 'Query':
       return True
 
     return False
