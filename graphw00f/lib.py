@@ -28,9 +28,10 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(url, payload=query)
+    print(response)
     if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
       return True
-    elif response.get('errors') and any('locations' in i for i in response['errors']):
+    elif response.get('errors') and (any('locations' in i for i in response['errors']) or (any('extensions' in i for i in response))):
       return True
     elif response.get('data'):
       return True
@@ -521,6 +522,16 @@ class GRAPHW00F:
     '''
     response = self.graph_query(self.url, payload=query)
     if response.get('data', '').get('__typename', '') == 'Query':
+      return True
+
+    query = '''
+      query {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'Not resolving __typename. There\'s no GraphQL schema in Dgraph. Use the /admin API to add a GraphQL schema'):
       return True
 
     return False
