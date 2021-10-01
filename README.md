@@ -25,7 +25,7 @@
 
 
 # How does it work?
-graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is the GraphQL fingerprinting tool for GQL endpoints, it sends a mix of benign and malformed queries to determine the GraphQL engine running behind the scenes. 
+graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is the GraphQL fingerprinting tool for GQL endpoints, it sends a mix of benign and malformed queries to determine the GraphQL engine running behind the scenes.
 graphw00f will provide insights into what security defences each technology provides out of the box, and whether they are on or off by default.
 
 Specially crafted queries cause different GraphQL server implementations to respond uniquely to queries, mutations and subscriptions, this makes it trivial to fingerprint the backend engine and distinguish between the various GraphQL implementations. (CWE: [CWE-200](https://cwe.mitre.org/data/definitions/200.html))
@@ -50,10 +50,11 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * Diana.jl - Julia
 * Strawberry - Python
 * Tartiflette - Python
-                                                                                           
+* Dgraph - JavaScript
+
 # GraphQL Technologies Defence Matrices
 Each fingerprinted technology (e.g. Graphene, Ariadne, ...) has an associated document ([example for graphene](https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md)) which covers the security defence mechanisms the specific technology supports to give a better idea how the implementation may be attacked.
-                                                                                                              
+
 ```
 | Field Suggestions | Query Depth Limit | Query Cost Analysis | Automatic Persisted Queries | Introspection      | Debug Mode | Batch Requests  |
 |-------------------|-------------------|---------------------|-----------------------------|--------------------|------------|-----------------|
@@ -62,8 +63,8 @@ Each fingerprinted technology (e.g. Graphene, Ariadne, ...) has an associated do
 
 # Prerequisites
 * python3
-* requests                   
-                                                                                                              
+* requests
+
 # Installation
 ## Clone Repository
 `git clone git@github.com:dolevf/graphw00f.git`
@@ -96,26 +97,26 @@ This is an example how to fingerprint (`-f`) an endpoint where GraphQL's locatio
 ```
 python3 main.py -f -t https://demo.hypergraphql.org:8484/graphql
 
-                +-------------------+                 
-                |     graphw00f     |                 
-                +-------------------+                 
-                  ***            ***                  
-                **                  ***               
-              **                       **             
-    +--------------+              +--------------+       
-    |    Node X    |              |    Node Y    |       
-    +--------------+              +--------------+     
-                  ***            ***                  
-                     **        **                     
-                       **    **                       
-                    +------------+                      
-                    |   Node Z   |                      
-                    +------------+    
+                +-------------------+
+                |     graphw00f     |
+                +-------------------+
+                  ***            ***
+                **                  ***
+              **                       **
+    +--------------+              +--------------+
+    |    Node X    |              |    Node Y    |
+    +--------------+              +--------------+
+                  ***            ***
+                     **        **
+                       **    **
+                    +------------+
+                    |   Node Z   |
+                    +------------+
 
                 graphw00f - v1.0.4
           The fingerprinting tool for GraphQL
            Dolev Farhi <dolev@lethalbit.com>
-  
+
 [*] Checking if GraphQL is available at https://demo.hypergraphql.org:8484/graphql...
 [*] Found GraphQL...
 [*] Attempting to fingerprint...
@@ -130,28 +131,28 @@ python3 main.py -f -t https://demo.hypergraphql.org:8484/graphql
 This is an example how graphw00f can detect (`-d`) where GraphQL lives and then execute the fingerprinting process (`-f`).
 
 ```
-python3 main.py -f -d -t http://localhost:5000 
-               
-                +-------------------+                 
-                |     graphw00f     |                 
-                +-------------------+                 
-                  ***            ***                  
-                **                  ***               
-              **                       **             
-    +--------------+              +--------------+       
-    |    Node X    |              |    Node Y    |       
-    +--------------+              +--------------+     
-                  ***            ***                  
-                     **        **                     
-                       **    **                       
-                    +------------+                      
-                    |   Node Z   |                      
-                    +------------+    
+python3 main.py -f -d -t http://localhost:5000
 
-                graphw00f - v1.0.4 
+                +-------------------+
+                |     graphw00f     |
+                +-------------------+
+                  ***            ***
+                **                  ***
+              **                       **
+    +--------------+              +--------------+
+    |    Node X    |              |    Node Y    |
+    +--------------+              +--------------+
+                  ***            ***
+                     **        **
+                       **    **
+                    +------------+
+                    |   Node Z   |
+                    +------------+
+
+                graphw00f - v1.0.4
           The fingerprinting tool for GraphQL
            Dolev Farhi <dolev@lethalbit.com>
-  
+
 [*] Checking http://dvga.example.local:5000/graphql
 [!] Found GraphQL at http://dvga.example.local:5000/graphql
 [*] Attempting to fingerprint...
@@ -161,7 +162,7 @@ python3 main.py -f -d -t http://localhost:5000
 [!] Homepage: https://graphene-python.org
 [*] Completed.
 ```
-                                                                                                              
+
 # Support and Issues
 Any issues with graphw00f such as false positives, inaccurate detections, bugs, etc. please create a GitHub issue with environment details.
 
