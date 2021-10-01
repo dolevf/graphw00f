@@ -30,7 +30,7 @@ class GRAPHW00F:
     response = self.graph_query(url, payload=query)
     if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
       return True
-    elif response.get('errors') and (any('locations' in i for i in response['errors'])):
+    elif response.get('errors') and (any('locations' in i for i in response['errors']) or (any('extensions' in i for i in response))):
       return True
     elif response.get('data'):
       return True
@@ -296,7 +296,7 @@ class GRAPHW00F:
     '''
     response = self.graph_query(self.url, payload=query)
     if response.get('data'):
-      if response.get('data').get('alias1$1', '') == 'QueryRoot':
+      if response.get('data', {}).get('alias1$1', '') == 'QueryRoot':
         return True
 
     query = '''query aa#aa { __typename }'''
@@ -521,7 +521,7 @@ class GRAPHW00F:
     '''
     response = self.graph_query(self.url, payload=query)
     try:
-      if response.get('data', '').get('__typename', '') == 'Query':
+      if response.get('data', {}).get('__typename', '') == 'Query':
         return True
     except AttributeError:
       pass
