@@ -180,6 +180,12 @@ def get_engines():
       'url':'https://dgraph.io/',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/dgraph.md',
       'technology':['JavaScript']
+    },
+    'directus':{
+      'name':'Directus',
+      'url':'https://directus.io/',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/directus.md',
+      'technology':['TypeScript']
     }
   }
 

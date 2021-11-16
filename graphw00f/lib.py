@@ -77,7 +77,8 @@ class GRAPHW00F:
       return 'strawberry'
     elif self.engine_tartiflette():
       return 'tartiflette'
-
+    elif self.engine_directus():
+      return 'directus'
     return None
 
   def graph_query(self, url, operation='query', payload={}):
@@ -532,5 +533,16 @@ class GRAPHW00F:
 
     if error_contains(response, 'Not resolving __typename. There\'s no GraphQL schema in Dgraph. Use the /admin API to add a GraphQL schema'):
       return True
+
+    return False
+
+  def engine_directus(self):
+    query = ''
+
+    response = self.graph_query(self.url, payload=query)
+    errors = response.get('errors', [])
+    if response.get('errors', []):
+      if errors and errors[0].get('extensions', {}).get('code' '') == 'INVALID_PAYLOAD':
+        return True
 
     return False

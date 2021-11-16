@@ -1,4 +1,4 @@
-# ProductName
+# graphql-php
 
 # Table of Contents
 * [About](#About)

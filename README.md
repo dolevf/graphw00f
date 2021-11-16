@@ -51,6 +51,7 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * Strawberry - Python
 * Tartiflette - Python
 * Dgraph - JavaScript
+* Directus - TypeScript
 
 # GraphQL Technologies Defence Matrices
 Each fingerprinted technology (e.g. Graphene, Ariadne, ...) has an associated document ([example for graphene](https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md)) which covers the security defence mechanisms the specific technology supports to give a better idea how the implementation may be attacked.
@@ -113,7 +114,7 @@ python3 main.py -f -t https://demo.hypergraphql.org:8484/graphql
                     |   Node Z   |
                     +------------+
 
-                graphw00f - v1.0.4
+                graphw00f - v1.0.7
           The fingerprinting tool for GraphQL
            Dolev Farhi <dolev@lethalbit.com>
 
