@@ -73,6 +73,12 @@ def get_engines():
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/apollo.md',
       'technology':['JavaScript', 'Node.js', 'TypeScript']
     },
+    'aws-appsync':{
+      'name':'Aws AppSync',
+      'url':'https://aws.amazon.com/appsync',
+      'ref':'https://aws.amazon.com/appsync',
+      'technology':[],
+    },
     'graphene':{
       'name':'Graphene',
       'url':'https://graphene-python.org',

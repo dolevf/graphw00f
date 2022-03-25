@@ -47,6 +47,8 @@ class GRAPHW00F:
       return 'ariadne'
     elif self.engine_apollo():
       return 'apollo'
+    elif self.engine_awsappsync():
+        return 'aws-appsync'
     elif self.engine_hasura():
       return 'hasura'
     elif self.engine_wpgraphql():
@@ -114,6 +116,11 @@ class GRAPHW00F:
       return True
 
     return False
+
+  def engine_awsappsync(self):
+      query = 'query @skip { __typename }'
+      response = self.graph_query(self.url, payload=query)
+      return error_contains(response, 'MisplacedDirective')
 
   def engine_graphene(self):
     query = '''aaa'''
