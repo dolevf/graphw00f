@@ -74,7 +74,7 @@ def get_engines():
       'technology':['JavaScript', 'Node.js', 'TypeScript']
     },
     'aws-appsync':{
-      'name':'Aws AppSync',
+      'name':'AWS AppSync',
       'url':'https://aws.amazon.com/appsync',
       'ref':'https://aws.amazon.com/appsync',
       'technology':[],
