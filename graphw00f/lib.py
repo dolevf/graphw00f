@@ -39,7 +39,9 @@ class GRAPHW00F:
 
   def execute(self, url):
     self.url = url
-    if self.engine_dgraph():
+    if self.engine_graphql_yoga():
+      return 'graphql_yoga'
+    elif self.engine_dgraph():
       return 'dgraph'
     elif self.engine_graphene():
       return 'graphene'
@@ -95,7 +97,19 @@ class GRAPHW00F:
       return response.json()
     except:
       return {}
+ 
+  def engine_graphql_yoga(self):
+    query = '''
+      subscription {
+         __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    print(response)
+    if error_contains(response, 'asyncExecutionResult[Symbol.asyncIterator] is not a function') or error_contains(response, 'Unexpected error.'):
+        return True
 
+    return False
   def engine_apollo(self):
     query = '''
       query @skip {
@@ -528,8 +542,9 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    if response.get('data', {}).get('__typename', '') == 'Query':
-      return True
+    if 'data' in response and response['data']:
+      if response.get('data').get('__typename', '') == 'Query':
+        return True
 
     query = '''
       query {

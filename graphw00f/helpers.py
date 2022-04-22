@@ -192,6 +192,12 @@ def get_engines():
       'url':'https://directus.io/',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/directus.md',
       'technology':['TypeScript']
+    },
+    'graphql_yoga':{
+      'name':'GraphQL Yoga',
+      'url':'https://github.com/dotansimha/graphql-yoga',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-yoga.md',
+      'technology':['TypeScript']
     }
   }
 
