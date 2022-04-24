@@ -105,7 +105,6 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(self.url, payload=query)
-    print(response)
     if error_contains(response, 'asyncExecutionResult[Symbol.asyncIterator] is not a function') or error_contains(response, 'Unexpected error.'):
         return True
 
