@@ -43,6 +43,8 @@ class GRAPHW00F:
       return 'lighthouse'
     elif self.engine_graphql_yoga():
       return 'graphql_yoga'
+    elif self.engine_agoo():
+      return 'agoo'
     elif self.engine_dgraph():
       return 'dgraph'
     elif self.engine_graphene():
@@ -581,3 +583,15 @@ class GRAPHW00F:
       return True
 
     return False 
+
+  def engine_agoo(self):
+    query = '''
+      query { 
+        zzz 
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'eval error', part='code'):
+      return True
+    
+    return False

@@ -204,6 +204,12 @@ def get_engines():
       'url':'https://github.com/nuwave/lighthouse',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/lighthouse.md',
       'technology':['PHP']
+    },
+    'agoo':{
+      'name':'Agoo',
+      'url':'https://github.com/ohler55/agoo',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/agoo.md',
+      'technology':['Ruby']
     }
   }
 
