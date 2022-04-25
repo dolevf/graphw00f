@@ -11,11 +11,11 @@ class bcolors:
   FAIL = '\033[91m'
   ENDC = '\033[0m'
 
-def error_contains(response, word_to_match):
+def error_contains(response, word_to_match, part='message'):
   if isinstance(response, dict):
     if response.get('errors'):
       for i in response['errors']:
-        err_message = i.get('message', '')
+        err_message = i.get(part, '')
         if word_to_match in err_message:
           return True
     return False
@@ -198,6 +198,12 @@ def get_engines():
       'url':'https://github.com/dotansimha/graphql-yoga',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-yoga.md',
       'technology':['TypeScript']
+    },
+    'lighthouse':{
+      'name':'Lighthouse',
+      'url':'https://github.com/nuwave/lighthouse',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/lighthouse.md',
+      'technology':['PHP']
     }
   }
 

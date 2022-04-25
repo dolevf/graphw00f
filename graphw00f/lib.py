@@ -39,7 +39,9 @@ class GRAPHW00F:
 
   def execute(self, url):
     self.url = url
-    if self.engine_graphql_yoga():
+    if self.engine_lighthouse():
+      return 'lighthouse'
+    elif self.engine_graphql_yoga():
       return 'graphql_yoga'
     elif self.engine_dgraph():
       return 'dgraph'
@@ -567,3 +569,15 @@ class GRAPHW00F:
         return True
 
     return False
+  
+  def engine_lighthouse(self):
+    query = '''
+      query {
+        __typename @include(if: falsee)
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Internal server error') or error_contains(response, 'internal', part='category'):
+      return True
+
+    return False 
