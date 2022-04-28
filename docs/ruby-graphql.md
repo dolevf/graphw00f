@@ -3,6 +3,7 @@
 # Table of Contents
 * [About](#About)
 * [Security Features](#Security-Features)
+* [Validations](#Validations)
 
 # About
 ruby-graphql is a Ruby implementation of the GraphQL specification.
