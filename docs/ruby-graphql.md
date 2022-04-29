@@ -1,6 +1,7 @@
 # GraphQL Ruby
 
 Source: [https://github.com/rmosolgo/graphql-ruby](https://github.com/rmosolgo/graphql-ruby)
+
 Documentation: [https://graphql-ruby.org/](https://graphql-ruby.org/)
 
 # Table of Contents
