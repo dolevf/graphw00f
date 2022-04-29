@@ -1,5 +1,7 @@
 # GraphQL Ruby
 
+Language: [Ruby](https://www.ruby-lang.org/en/)
+
 Source: [https://github.com/rmosolgo/graphql-ruby](https://github.com/rmosolgo/graphql-ruby)
 
 Documentation: [https://graphql-ruby.org/](https://graphql-ruby.org/)
@@ -21,6 +23,10 @@ GraphQL Ruby provides the following security features:
 
 
 # Validations
+
+Total Validation Count: **28**
+
+
 GraphQL Ruby validates the following checks when a query is sent:
 
 | [Document Validations](https://spec.graphql.org/October2021/#sec-Documents) | [Operation Validations](https://spec.graphql.org/October2021/#sec-Validation.Operations) | [Field Validations](https://spec.graphql.org/October2021/#sec-Validation.Fields) | [Argument Validations](https://spec.graphql.org/October2021/#sec-Validation.Arguments) | [Fragment Validations](https://spec.graphql.org/October2021/#sec-Validation.Fragments)      | [Value/Type Validations](https://spec.graphql.org/October2021/#sec-Values) | [Directive Validations](https://spec.graphql.org/October2021/#sec-Validation.Directives)  | [Variable Validations](https://spec.graphql.org/October2021/#sec-Validation.Variables) | Misc. Validations |
