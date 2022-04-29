@@ -25,9 +25,9 @@ GraphQL Ruby validates the following checks when a query is sent:
 
 | Document Validations | Operation Validations | Field Validations | Argument Validations | Fragment Validations      | Value/Type Validations | Directive Validations  | Variable Validations | Misc. Validations |
 |----------------------|-----------------------|-------------------|----------------------|---------------------------|--------------------------|------------------------|----------------------|-------------------|
-| | Mutation root exists | Fields are defined on type | Argument literals are compatible | Fragment names are unique | Input object names are unique | Directives are defined | Variables default values are correctly typed | No definitions are present |
-| | Operation names are valid | Fields have appropriate selections | Argument names are unique | Fragment spreads are possible | Required input object attributes are present | Directives are in valid locations | Variable names are unique | |
+| | [Mutation root exists](https://github.com/rmosolgo/graphql-ruby/blob/master/spec/graphql/static_validation/rules/mutation_root_exists_spec.rb) | Fields are defined on type | Argument literals are compatible | Fragment names are unique | Input object names are unique | Directives are defined | Variables default values are correctly typed | No definitions are present |
+| | [Operation names are valid](https://github.com/rmosolgo/graphql-ruby/blob/master/spec/graphql/static_validation/rules/operation_names_are_valid_spec.rb) | Fields have appropriate selections | Argument names are unique | Fragment spreads are possible | Required input object attributes are present | Directives are in valid locations | Variable names are unique | |
 | | Query root exists | Field will merge | Arguments are defined | Fragment types exist | | Unique directives per location | Variable usages are allowed | |
-| | Subscription root exists |  | Requried arguments are present |  Fragements are finite | | | Variables are input types | |
+| | [Subscription root exists](https://github.com/rmosolgo/graphql-ruby/blob/master/spec/graphql/static_validation/rules/subscription_root_exists_spec.rb) |  | Requried arguments are present |  Fragements are finite | | | Variables are input types | |
 | | | | | Fragments are named | | | Variables are used and defined | |
 | | | | | Fragments are on composite types | | | | |
