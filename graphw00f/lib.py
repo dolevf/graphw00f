@@ -66,7 +66,7 @@ class GRAPHW00F:
     elif self.engine_hypergraphql():
       return 'hypergraphql'
     elif self.engine_ruby():
-      return 'ruby-graphql'
+      return 'graphql-ruby'
     elif self.engine_graphqlphp():
       return 'graphql-php'
     elif self.engine_gqlgen():

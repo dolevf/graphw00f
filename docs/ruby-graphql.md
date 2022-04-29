@@ -1,4 +1,7 @@
-# Ruby GraphQL
+# GraphQL Ruby
+
+Source: [https://github.com/rmosolgo/graphql-ruby](https://github.com/rmosolgo/graphql-ruby)
+Documentation: [https://graphql-ruby.org/](https://graphql-ruby.org/)
 
 # Table of Contents
 * [About](#About)
@@ -6,10 +9,10 @@
 * [Validations](#Validations)
 
 # About
-ruby-graphql is a Ruby implementation of the GraphQL specification.
+graphql-ruby is a Ruby implementation of the GraphQL specification.
 
 # Security Features
-Ruby GraphQL provides the following security features:
+GraphQL Ruby provides the following security features:
 
 | Field Suggestions | Query Depth Limit | Query Cost Analysis | Automatic Persisted Queries | Introspection      | Debug Mode | Batch Requests  |
 |-------------------|-------------------|---------------------|-----------------------------|--------------------|------------|-----------------|
@@ -17,7 +20,7 @@ Ruby GraphQL provides the following security features:
 
 
 # Validations
-Ruby GraphQL validates the following checks when a query is sent:
+GraphQL Ruby validates the following checks when a query is sent:
 
 | Document Validations | Operation Validations | Field Validations | Argument Validations | Fragment Validations      | Value/Type Validations | Directive Validations  | Variable Validations | Misc. Validations |
 |----------------------|-----------------------|-------------------|----------------------|---------------------------|--------------------------|------------------------|----------------------|-------------------|

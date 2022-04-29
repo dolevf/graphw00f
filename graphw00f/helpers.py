@@ -97,8 +97,8 @@ def get_engines():
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-php.md',
       'technology':['PHP']
     },
-    'ruby-graphql':{
-      'name':'Ruby GraphQL',
+    'graphql-ruby':{
+      'name':'GraphQL Ruby',
       'url':'https://graphql-ruby.org',
       'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/ruby-graphql.md',
       'technology':['Ruby']
