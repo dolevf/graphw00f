@@ -100,7 +100,7 @@ def get_engines():
     'graphql-ruby':{
       'name':'GraphQL Ruby',
       'url':'https://graphql-ruby.org',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/ruby-graphql.md',
+      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-ruby.md',
       'technology':['Ruby']
     },
     'hypergraphql':{
