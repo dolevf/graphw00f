@@ -14,7 +14,7 @@
 # Table of Contents
 * [How does it work?](#how-does-it-work)
 * [Detections](#detections)
-* [GraphQL Technologies Defence Matrices](#graphql-technologies-defence-matrices)
+* [GraphQL Threat Matrix](#graphql-threat-matrix)
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
 * [Example Usage](#example)
@@ -57,8 +57,8 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * Lighthouse - PHP
 * Agoo - Ruby
 
-# GraphQL Technologies Defence Matrices
-The graphw00f project uses the GraphQL Threat Matrix project as its technology security matrix database. When graphw00f successfully fingerprints a GraphQL endpoint, it will print out the threat matrix document. This document helps security engineers to identify how mature the technology is, what security features it offers, and whether it contains CVEs.
+# GraphQL Threat Matrix
+The graphw00f project uses the [GraphQL Threat Matrix Project](https://github.com/nicholasaleks/graphql-threat-matrix/) as its technology security matrix database. When graphw00f successfully fingerprints a GraphQL endpoint, it will print out the threat matrix document. This document helps security engineers to identify how mature the technology is, what security features it offers, and whether it contains any CVEs.
 
 ![GraphQL Threat Matrix](/static/threat-matrix.png?raw=true "GraphQL Threat Matrix")
 
