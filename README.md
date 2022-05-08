@@ -26,7 +26,7 @@
 
 # How does it work?
 graphw00f (inspired by [wafw00f](https://github.com/EnableSecurity/wafw00f)) is the GraphQL fingerprinting tool for GQL endpoints, it sends a mix of benign and malformed queries to determine the GraphQL engine running behind the scenes.
-graphw00f will provide insights into what security defences each technology provides out of the box, and whether they are on or off by default.
+graphw00f will make use of the GraphQL Threat Matrix project to provide insight into what security defences each technology provides out of the box, and whether they are on or off by default.
 
 Specially crafted queries cause different GraphQL server implementations to respond uniquely to queries, mutations and subscriptions, this makes it trivial to fingerprint the backend engine and distinguish between the various GraphQL implementations. (CWE: [CWE-200](https://cwe.mitre.org/data/definitions/200.html))
 
@@ -58,13 +58,9 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * Agoo - Ruby
 
 # GraphQL Technologies Defence Matrices
-Each fingerprinted technology (e.g. Graphene, Ariadne, ...) has an associated document ([example for graphene](https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md)) which covers the security defence mechanisms the specific technology supports to give a better idea how the implementation may be attacked.
+The graphw00f project uses the GraphQL Threat Matrix project as its technology security matrix database. When graphw00f successfully fingerprints a GraphQL endpoint, it will print out the threat matrix document. This document helps security engineers to identify how mature the technology is, what security features it offers, and whether it contains CVEs.
 
-```
-| Field Suggestions | Query Depth Limit | Query Cost Analysis | Automatic Persisted Queries | Introspection      | Debug Mode | Batch Requests  |
-|-------------------|-------------------|---------------------|-----------------------------|--------------------|------------|-----------------|
-| On by Default     | No Support        | No Support          | No Support                  | Enabled by Default | N/A        | Off by Default  |
-```
+![GraphQL Threat Matrix](/static/threat-matrix.png?raw=true "GraphQL Threat Matrix")
 
 # Prerequisites
 * python3
@@ -154,7 +150,7 @@ python3 main.py -f -d -t http://localhost:5000
                     |   Node Z   |
                     +------------+
 
-                graphw00f - v1.0.4
+                graphw00f - v1.1.2
           The fingerprinting tool for GraphQL
            Dolev Farhi <dolev@lethalbit.com>
 
@@ -162,7 +158,7 @@ python3 main.py -f -d -t http://localhost:5000
 [!] Found GraphQL at http://dvga.example.local:5000/graphql
 [*] Attempting to fingerprint...
 [*] Discovered GraphQL Engine: (Graphene)
-[!] Attack Surface Matrix: https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md
+[!] Attack Surface Matrix: https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphene.md
 [!] Technologies: Python
 [!] Homepage: https://graphene-python.org
 [*] Completed.

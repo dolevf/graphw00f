@@ -70,145 +70,145 @@ def get_engines():
     'apollo':{
       'name':'Apollo',
       'url':'https://www.apollographql.com',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/apollo.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/apollo.md',
       'technology':['JavaScript', 'Node.js', 'TypeScript']
     },
     'aws-appsync':{
       'name':'AWS AppSync',
       'url':'https://aws.amazon.com/appsync',
-      'ref':'https://aws.amazon.com/appsync',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/appsync.md',
       'technology':[],
     },
     'graphene':{
       'name':'Graphene',
       'url':'https://graphene-python.org',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphene.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphene.md',
       'technology':['Python']
     },
     'hasura':{
       'name':'Hasura',
       'url':'https://hasura.io',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/hasura.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/hasura.md',
       'technology':['Haskell']
     },
     'graphql-php':{
       'name':'GraphQL PHP',
       'url':'https://webonyx.github.io/graphql-php',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-php.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-php.md',
       'technology':['PHP']
     },
     'ruby-graphql':{
       'name':'Ruby GraphQL',
       'url':'https://graphql-ruby.org',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/ruby-graphql.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-ruby.md',
       'technology':['Ruby']
     },
     'hypergraphql':{
       'name':'HyperGraphQL',
       'url':'https://www.hypergraphql.org',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/hypergraphql.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/hypergraphql.md',
       'technology':['Java']
     },
     'ariadne':{
       'name':'Ariadne',
       'url':'https://ariadnegraphql.org',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/ariadne.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/ariadne.md',
       'technology':['Python']
     },
     'graphql-api-for-wp':{
       'name':'GraphQL API for Wordpress',
       'url':'https://graphql-api.com',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphqlapiforwp.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-api-for-wp.md',
       'technology':['PHP'],
     },
     'wpgraphql':{
       'name':'WPGraphQL WordPress Plugin',
       'url':'https://www.wpgraphql.com',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/wpgraphql.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/wp-graphql.md',
       'technology':['PHP']
     },
     'gqlgen':{
       'name':'gqlgen - GraphQL for Go',
       'url':'https://gqlgen.com',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/gqlgen.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/gqlgen.md',
       'technology':['Go']
     },
     'graphql-go':{
       'name':'graphql-go -GraphQL for Go',
       'url':'https://github.com/graphql-go/graphql',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-go.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-go.md',
       'technology':['Go']
     },
     'graphql-java':{
       'name':'graphql-java - GraphQL for Java',
       'url':'https://www.graphql-java.com',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-java.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-java.md',
       'technology':['Java']
     },
     'juniper':{
       'name':'Juniper - GraphQL for Rust',
       'url':'https://graphql-rust.github.io',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/juniper.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/juniper.md',
       'technology':['Rust']
     },
     'sangria':{
       'name':'Sangria - GraphQL for Scala',
       'url':'https://sangria-graphql.github.io',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/sangria.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/sangria.md',
       'technology':['Scala']
     },
     'flutter':{
       'name':'Flutter - GraphQL for Dart',
       'url':'https://github.com/zino-app/graphql-flutter',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/flutter.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/gql-dart.md',
       'technology':['Dart']
     },
     'dianajl':{
       'name':'Diana.jl - GraphQL for Julia',
       'url':'https://github.com/neomatrixcode/Diana.jl',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/dianajl.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/diana.md',
       'technology':['Julia']
     },
     'strawberry':{
       'name':'Strawberry - GraphQL for Python',
       'url':'https://github.com/strawberry-graphql/strawberry',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/strawberry.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/strawberry.md',
       'technology':['Python']
     },
     'tartiflette':{
       'name':'tartiflette - GraphQL for Python',
       'url':'https://github.com/tartiflette/tartiflette',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/tartiflette.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/tartiflette.md',
       'technology':['Python']
     },
     'dgraph':{
       'name':'Dgraph',
       'url':'https://dgraph.io/',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/dgraph.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/dgraph.md',
       'technology':['JavaScript']
     },
     'directus':{
       'name':'Directus',
       'url':'https://directus.io/',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/directus.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/directus.md',
       'technology':['TypeScript']
     },
     'graphql_yoga':{
       'name':'GraphQL Yoga',
       'url':'https://github.com/dotansimha/graphql-yoga',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/graphql-yoga.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-yoga.md',
       'technology':['TypeScript']
     },
     'lighthouse':{
       'name':'Lighthouse',
       'url':'https://github.com/nuwave/lighthouse',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/lighthouse.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/lighthouse.md',
       'technology':['PHP']
     },
     'agoo':{
       'name':'Agoo',
       'url':'https://github.com/ohler55/agoo',
-      'ref':'https://github.com/dolevf/graphw00f/blob/main/docs/agoo.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/agoo.md',
       'technology':['Ruby']
     }
   }
