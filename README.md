@@ -17,6 +17,7 @@
 * [GraphQL Threat Matrix](#graphql-threat-matrix)
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
+* [Configuration](#configuration)
 * [Example Usage](#example)
   * [Fingerprinting GraphQL](#fingerprinting-graphql)
   * [Detecting & Fingerprinting GraphQL](#detecting-and-fingerprinting-graphql)
@@ -89,6 +90,17 @@ Options:
   -l, --list            List all GraphQL technologies graphw00f is able to
                         detect
   -v, --version         Print out the current version and exit.
+```
+
+# Configuration
+There aren't a whole lot of configurations required for graphw00f. But, if you need things like Authorization headers or Cookies set for a particular endpoint, use the `conf.py` file.
+
+```
+# Custom Headers
+HEADERS = {'User-Agent':'graphw00f'}
+
+# Custom Cookies
+COOKIES = {"PHPSESS":"DEADBEEF"}
 ```
 
 # Example
