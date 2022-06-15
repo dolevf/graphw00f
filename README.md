@@ -75,7 +75,7 @@ The graphw00f project uses the [GraphQL Threat Matrix Project](https://github.co
 `python3 main.py -h`
 
 ```
-Usage: main.py -t http://example.com/graphql -f
+Usage: main.py -d -f -t http://example.com
 
 Options:
   -h, --help            show this help message and exit
@@ -89,6 +89,8 @@ Options:
                         Output results to a file (CSV)
   -l, --list            List all GraphQL technologies graphw00f is able to
                         detect
+  -w WORDLIST, --wordlist=WORDLIST
+                        Path to a list of custom GraphQL endpoints
   -v, --version         Print out the current version and exit.
 ```
 
