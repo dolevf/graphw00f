@@ -4,10 +4,11 @@ import sys
 import conf
 
 from graphw00f.helpers import (
-  get_time, 
-  draw_art, 
-  get_engines, 
+  get_time,
+  draw_art,
+  get_engines,
   user_confirmed,
+  read_custom_wordlist,
   possible_graphql_paths,
   bcolors
 )
@@ -18,25 +19,26 @@ from optparse import OptionParser
 
 from version import VERSION
 from graphw00f.lib import (
-  GRAPHW00F, 
+  GRAPHW00F,
   GraphQLDetectionFailed
 )
 
 
 def main():
     parser = OptionParser(usage='%prog -d -f -t http://example.com')
-    parser.add_option('-r', '--noredirect', action='store_false', dest='followredirect', default=True, 
-                     
+    parser.add_option('-r', '--noredirect', action='store_false', dest='followredirect', default=True,
+
                             help='Do not follow redirections given by 3xx responses')
     parser.add_option('-t', '--target', dest='url', help='target url with the path')
     parser.add_option('-f', '--fingerprint', dest='fingerprint', default=False, action='store_true', help='fingerprint mode')
     parser.add_option('-d', '--detect', dest='detect', default=False, action='store_true', help='detect mode')
     parser.add_option('-T', '--timeout', dest='timeout', default=10, help='Request timeout in seconds')
-    parser.add_option('-o', '--output-file', dest='output_file', 
+    parser.add_option('-o', '--output-file', dest='output_file',
                             help='Output results to a file (CSV)', default=None)
-    parser.add_option('-l', '--list', dest='list', action='store_true', default=False, 
+    parser.add_option('-l', '--list', dest='list', action='store_true', default=False,
                             help='List all GraphQL technologies graphw00f is able to detect')
-    parser.add_option('--version', '-v', dest='version', action='store_true', default=False, 
+    parser.add_option('-w', '--wordlist', dest='wordlist', default=False, help='Path to a list of custom GraphQL endpoints')
+    parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                             help='Print out the current version and exit.')
     options, args = parser.parse_args()
 
@@ -51,7 +53,7 @@ def main():
                                             technology=', '.join(v['technology']))
                                            )
       sys.exit(0)
-  
+
     if options.version:
       print('version:', VERSION)
       sys.exit(0)
@@ -59,46 +61,50 @@ def main():
     if not options.url:
       parser.print_help()
       sys.exit(1)
-    
+
     if not options.detect and not options.fingerprint:
       parser.print_help()
       sys.exit(1)
 
     if not isinstance(options.timeout, int):
       options.timeout = 10
-        
+
     g = GRAPHW00F(follow_redirects=options.followredirect,
                   headers=conf.HEADERS,
                   cookies=conf.COOKIES,
                   timeout=options.timeout)
     url = options.url
-    
+
     url_scheme = urlparse(url).scheme
     url_netloc = urlparse(url).netloc
+    wordlist = possible_graphql_paths()
     detected = False
     print(draw_art())
 
     if url_scheme not in ('http', 'https'):
       print('URL is missing a scheme (http|https)')
       sys.exit(1)
-    
+
     if not url_netloc:
       print('url {url} does not seem right.'.format(url=url))
       sys.exit(1)
 
     if options.detect:
-      for possible_path in possible_graphql_paths():
-        target = url + possible_path
+      if options.wordlist:
+        wordlist = read_custom_wordlist(options.wordlist)
+
+      for endpoint in wordlist:
+        target = url + endpoint
         print('[*] Checking {}'.format(target))
         try:
           g.check(target)
           print('[!] Found GraphQL at {}'.format(target))
           url = target
           detected = True
-          
+
           if not options.fingerprint:
             sys.exit(0)
-          
+
           break
         except GraphQLDetectionFailed:
           continue
@@ -121,7 +127,7 @@ def main():
 
     print('[*] Attempting to fingerprint...')
     result = g.execute(url)
-    
+
     if result:
       name = get_engines()[result]['name']
       url = get_engines()[result]['url']

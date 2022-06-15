@@ -28,8 +28,10 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(url, payload=query)
-    if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
-      return True
+
+    if response.get('data'):
+      if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
+        return True
     elif response.get('errors') and (any('locations' in i for i in response['errors']) or (any('extensions' in i for i in response))):
       return True
     elif response.get('data'):
