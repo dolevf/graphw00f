@@ -1,5 +1,6 @@
 
 import datetime
+import os.path
 from urllib.parse import urlparse
 from version import VERSION
 
@@ -10,6 +11,17 @@ class bcolors:
   WARNING = '\033[93m'
   FAIL = '\033[91m'
   ENDC = '\033[0m'
+
+def read_custom_wordlist(location):
+  wordlists = set()
+  if os.path.exists(location):
+    f = open(location, 'r').read()
+    for line in f.splitlines():
+      if not line.startswith('/'):
+        line = '/' + line
+
+      wordlists.add(line)
+  return wordlists
 
 def error_contains(response, word_to_match, part='message'):
   if isinstance(response, dict):
@@ -62,6 +74,7 @@ def possible_graphql_paths():
     '/console',
     '/playground',
     '/gql',
+    '/query',
     '/index.php?graphql'
   ]
 
