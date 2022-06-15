@@ -21,6 +21,8 @@ def read_custom_wordlist(location):
         line = '/' + line
 
       wordlists.add(line)
+  else:
+    print('Could not wordlist file: {}'.format(location))
   return wordlists
 
 def error_contains(response, word_to_match, part='message'):
