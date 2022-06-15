@@ -22,7 +22,7 @@ def read_custom_wordlist(location):
 
       wordlists.add(line)
   else:
-    print('Could not wordlist file: {}'.format(location))
+    print('Could not find wordlist file: {}'.format(location))
   return wordlists
 
 def error_contains(response, word_to_match, part='message'):
