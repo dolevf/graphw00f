@@ -37,6 +37,7 @@ def main():
                             help='Output results to a file (CSV)', default=None)
     parser.add_option('-l', '--list', dest='list', action='store_true', default=False,
                             help='List all GraphQL technologies graphw00f is able to detect')
+    parser.add_option('-u', '--user-agent', dest='useragent', default=None, help='Custom user-agent to use (overrides the one from headers configuration)')
     parser.add_option('-w', '--wordlist', dest='wordlist', default=False, help='Path to a list of custom GraphQL endpoints')
     parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                             help='Print out the current version and exit.')
@@ -70,7 +71,7 @@ def main():
       options.timeout = 10
 
     g = GRAPHW00F(follow_redirects=options.followredirect,
-                  headers=conf.HEADERS,
+                  headers=conf.HEADERS if not options.useragent else {**conf.HEADERS, **{'User-Agent': options.useragent}},
                   cookies=conf.COOKIES,
                   timeout=options.timeout)
     url = options.url
