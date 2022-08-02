@@ -91,6 +91,9 @@ Options:
                         detect
   -w WORDLIST, --wordlist=WORDLIST
                         Path to a list of custom GraphQL endpoints
+  -u USERAGENT, --user-agent=USERAGENT
+                        Custom user-agent to use (overrides the one from
+                        headers configuration)
   -v, --version         Print out the current version and exit.
 ```
 
@@ -104,6 +107,8 @@ HEADERS = {'User-Agent':'graphw00f'}
 # Custom Cookies
 COOKIES = {"PHPSESS":"DEADBEEF"}
 ```
+
+Using `--user-agent` adds `User-Agent` key regardless if `conf.py` file has it, if the file already has one, command-line parameter overrides it.
 
 # Example
 ## Fingerprinting GraphQL
