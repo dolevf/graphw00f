@@ -57,7 +57,7 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * GraphQL Yoga - TypeScript
 * Lighthouse - PHP
 * Agoo - Ruby
-* Mercurius - JavaScripts
+* Mercurius - JavaScript
 
 # GraphQL Threat Matrix
 The graphw00f project uses the [GraphQL Threat Matrix Project](https://github.com/nicholasaleks/graphql-threat-matrix/) as its technology security matrix database. When graphw00f successfully fingerprints a GraphQL endpoint, it will print out the threat matrix document. This document helps security engineers to identify how mature the technology is, what security features it offers, and whether it contains any CVEs.
