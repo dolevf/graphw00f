@@ -225,6 +225,12 @@ def get_engines():
       'url':'https://github.com/ohler55/agoo',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/agoo.md',
       'technology':['Ruby']
+    },
+    'mercurius':{
+      'name':'mercurius',
+      'url':'https://github.com/mercurius-js/mercurius',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/agoo.md',
+      'technology':['JavaScript', 'Node.js', 'TypeScript']
     }
   }
 

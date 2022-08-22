@@ -43,6 +43,8 @@ class GRAPHW00F:
     self.url = url
     if self.engine_lighthouse():
       return 'lighthouse'
+    if self.engine_mercurius():
+      return 'mercurius'
     elif self.engine_graphql_yoga():
       return 'graphql_yoga'
     elif self.engine_agoo():
@@ -573,7 +575,7 @@ class GRAPHW00F:
         return True
 
     return False
-  
+
   def engine_lighthouse(self):
     query = '''
       query {
@@ -588,12 +590,21 @@ class GRAPHW00F:
 
   def engine_agoo(self):
     query = '''
-      query { 
-        zzz 
+      query {
+        zzz
       }
     '''
     response = self.graph_query(self.url, payload=query)
     if error_contains(response, 'eval error', part='code'):
       return True
-    
+
     return False
+
+  def engine_mercurius(self):
+    query = ''
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'Unknown query'):
+      return True
+    return False
+
