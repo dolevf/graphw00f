@@ -612,9 +612,9 @@ class GRAPHW00F:
 
   def engine_morpheus(self):
     query = ''''
-    queryy {
-    	  __typename
-    }
+      queryy {
+          __typename
+      }
     '''
     response = self.graph_query(self.url, payload=query)
 
