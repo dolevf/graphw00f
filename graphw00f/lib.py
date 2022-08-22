@@ -43,8 +43,10 @@ class GRAPHW00F:
     self.url = url
     if self.engine_lighthouse():
       return 'lighthouse'
-    if self.engine_mercurius():
-      return 'mercurius'
+    elif self.engine_morpheus():
+      return 'morpheus-graphql'
+    elif self.engine_mercurius():
+      return 'mercurius-graphql'
     elif self.engine_graphql_yoga():
       return 'graphql_yoga'
     elif self.engine_agoo():
@@ -606,5 +608,18 @@ class GRAPHW00F:
 
     if error_contains(response, 'Unknown query'):
       return True
+    return False
+
+  def engine_morpheus(self):
+    query = ''''
+      queryy {
+          __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'expecting white space') or error_contains(response, 'offset'):
+      return True
+
     return False
 
