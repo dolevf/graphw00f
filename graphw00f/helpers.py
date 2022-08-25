@@ -237,6 +237,12 @@ def get_engines():
       'url':'https://github.com/morpheusgraphql/morpheus-graphql',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/morpheus-graphql',
       'technology':['Haskell']
+    },
+    'jaal':{
+      'name':'jaal',
+      'url':'https://github.com/appointy/jaal',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/jaal',
+      'technology':['Golang']
     }
   }
 
