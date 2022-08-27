@@ -235,8 +235,20 @@ def get_engines():
     'morpheus-graphql':{
       'name':'morpheus-graphql',
       'url':'https://github.com/morpheusgraphql/morpheus-graphql',
-      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/morpheus-graphql',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/morpheus-graphql.md',
       'technology':['Haskell']
+    },
+    'lacinia':{
+      'name':'lacinia',
+      'url':'https://github.com/walmartlabs/lacinia',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/lacinia.md',
+      'technology':['Clojure']
+    },
+    'caliban':{
+      'name':'caliban',
+      'url':'https://github.com/ghostdogpr/caliban',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/caliban.md',
+      'technology':['Scala']
     }
   }
 

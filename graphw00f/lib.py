@@ -43,6 +43,10 @@ class GRAPHW00F:
     self.url = url
     if self.engine_lighthouse():
       return 'lighthouse'
+    elif self.engine_caliban():
+      return 'caliban'
+    elif self.engine_lacinia():
+      return 'lacinia'
     elif self.engine_morpheus():
       return 'morpheus-graphql'
     elif self.engine_mercurius():
@@ -433,7 +437,7 @@ class GRAPHW00F:
     '''
     response = self.graph_query(self.url, payload=query)
     try:
-      if response['data']['__typename'] == 'RootQuery':
+      if response['data'] != None and response['data']['__typename'] == 'RootQuery':
         return True
     except KeyError:
       pass
@@ -611,7 +615,7 @@ class GRAPHW00F:
     return False
 
   def engine_morpheus(self):
-    query = ''''
+    query = '''
       queryy {
           __typename
       }
@@ -623,3 +627,36 @@ class GRAPHW00F:
 
     return False
 
+  def engine_lacinia(self):
+    query = '''
+      query {
+        graphw00f
+      }
+    '''
+
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'Cannot query field `graphw00f\' on type `QueryRoot\'.'):
+      return True
+
+    return False
+
+  def engine_caliban(self):
+    query = '''
+      query {
+        __typename
+      }
+
+      fragment woof on __Schema {
+        directives {
+          name
+        }
+      }
+    '''
+
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'Fragment \'woof\' is not used in any spread'):
+      return True
+
+    return False
