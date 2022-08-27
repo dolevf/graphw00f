@@ -59,6 +59,8 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * Agoo - Ruby
 * Mercurius - JavaScript
 * morpheus-graphql - Haskell
+* Lacinia - Clojure
+* Caliban - Scala
 * jaal - Golang
 
 # GraphQL Threat Matrix
