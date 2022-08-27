@@ -249,6 +249,11 @@ def get_engines():
       'url':'https://github.com/ghostdogpr/caliban',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/caliban.md',
       'technology':['Scala']
+    'jaal':{
+      'name':'jaal',
+      'url':'https://github.com/appointy/jaal',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/jaal',
+      'technology':['Golang']
     }
   }
 

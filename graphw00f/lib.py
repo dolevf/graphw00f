@@ -47,6 +47,8 @@ class GRAPHW00F:
       return 'caliban'
     elif self.engine_lacinia():
       return 'lacinia'
+    elif self.engine_jaal():
+      return 'jaal'
     elif self.engine_morpheus():
       return 'morpheus-graphql'
     elif self.engine_mercurius():
@@ -637,6 +639,12 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
 
     if error_contains(response, 'Cannot query field `graphw00f\' on type `QueryRoot\'.'):
+    
+  def engine_jaal(self):
+    query = '''{}'''
+    response = self.graph_query(self.url, payload=query, operation='{}')
+
+    if error_contains(response, 'must have a single query') or error_contains(response, 'offset'):
       return True
 
     return False
@@ -660,3 +668,4 @@ class GRAPHW00F:
       return True
 
     return False
+
