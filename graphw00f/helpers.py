@@ -248,7 +248,8 @@ def get_engines():
       'name':'caliban',
       'url':'https://github.com/ghostdogpr/caliban',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/caliban.md',
-      'technology':['Scala']
+      'technology':['Scala'],
+      },
     'jaal':{
       'name':'jaal',
       'url':'https://github.com/appointy/jaal',
@@ -259,5 +260,5 @@ def get_engines():
 
 def user_confirmed(choice):
   if choice in ('yes', 'y'):
-   return True
+     return True
   return False

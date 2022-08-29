@@ -639,6 +639,9 @@ class GRAPHW00F:
     response = self.graph_query(self.url, payload=query)
 
     if error_contains(response, 'Cannot query field `graphw00f\' on type `QueryRoot\'.'):
+        return True
+
+    return False
     
   def engine_jaal(self):
     query = '''{}'''
