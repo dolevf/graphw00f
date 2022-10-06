@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "graphw00f"
+version = "1.1.9"
+description = "GraphQL Server Engine Fingerprinting utility"
+authors = ["Dolev Farhi <farhi.dolev@gmail.com>"]
+license = "BSD-3-Clause"
+packages = [{ include = "graphw00f" }]
+include = ["LICENSE"]
+readme = "README.md"
+repository = "https://github.com/dolevf/graphw00f"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/dolevf/graphw00f/issues"
+
+[tool.poetry.scripts]
+graphw00f = 'graphw00f:main'
+
+[tool.poetry.dependencies]
+python = ">=3.7, <4"
+requests = "^2"
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"

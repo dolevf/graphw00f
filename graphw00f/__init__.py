@@ -1,0 +1,1 @@
+from graphw00f.main import main # noqa
