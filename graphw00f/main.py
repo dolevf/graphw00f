@@ -135,5 +135,3 @@ def main():
     
     print(bcolors.ENDC + '[*] Completed.')
 
-if __name__ == '__main__':
-    main()
