@@ -10,8 +10,8 @@ from graphw00f.helpers import (
   user_confirmed,
   read_custom_wordlist,
   possible_graphql_paths,
-  bcolors
 )
+from graphw00f.logger import logger, setup_logger
 
 from time import sleep
 from urllib.parse import urlparse
@@ -41,22 +41,19 @@ def main():
     parser.add_option('-w', '--wordlist', dest='wordlist', default=False, help='Path to a list of custom GraphQL endpoints')
     parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                             help='Print out the current version and exit.')
-    options, args = parser.parse_args()
+    options, _ = parser.parse_args()
 
     if options.list:
       print(draw_art())
       count = 0
-      for k, v in get_engines().items():
+      for v in get_engines().values():
         count += 1
-        print('{index}. {name} ({technology})'.format(
-                                            index=count,
-                                            name=v['name'],
-                                            technology=', '.join(v['technology']))
-                                           )
+        print(f'{count}. {v["name"]} ({"".join(v["technology"])}')
+
       sys.exit(0)
 
     if options.version:
-      print('version:', VERSION)
+      logger.info(f'version: {VERSION}')
       sys.exit(0)
 
     if not options.url:
@@ -80,14 +77,13 @@ def main():
     url_netloc = urlparse(url).netloc
     wordlist = possible_graphql_paths()
     detected = False
-    print(draw_art())
 
     if url_scheme not in ('http', 'https'):
-      print('URL is missing a scheme (http|https)')
+      logger.critical('URL is missing a scheme (http|https)')
       sys.exit(1)
 
     if not url_netloc:
-      print('url {url} does not seem right.'.format(url=url))
+      logger.critical(f'url {url} does not seem right.')
       sys.exit(1)
 
     if options.detect:
@@ -96,10 +92,10 @@ def main():
 
       for endpoint in wordlist:
         target = url + endpoint
-        print('[*] Checking {}'.format(target))
+        logger.debug(f'[*] Checking {target}')
         try:
           g.check(target)
-          print('[!] Found GraphQL at {}'.format(target))
+          logger.info(f'[!] Found GraphQL at {target}')
           url = target
           detected = True
 
@@ -110,23 +106,23 @@ def main():
         except GraphQLDetectionFailed:
           continue
       if not detected:
-        print('[x] Could not find GraphQL anywhere.')
+        logger.info('[x] Could not find GraphQL anywhere.')
         sys.exit(1)
     else:
-      print('[*] Checking if GraphQL is available at {url}...'.format(url=url))  
+      logger.debug(f'[*] Checking if GraphQL is available at {url}...')  
       fingerprint = None
       try:
         if g.check(url):
-          print('[!] Found GraphQL.')
+          logger.info('[!] Found GraphQL.')
       except GraphQLDetectionFailed:
-          print(bcolors.FAIL + '[x] Could not determine the existence of GraphQL (Error: GraphQLDetectionFailed)' + bcolors.ENDC)
-          print('[*] Continue anyway? [y/n]'.format(url=url))
+          logger.error('[x] Could not determine the existence of GraphQL (Error: GraphQLDetectionFailed)')
+          logger.info('[*] Continue anyway? [y/n]')
           choice = input().lower()
           if not user_confirmed(choice):
-            print('Quitting.')
+            logger.info('Quitting.')
             sys.exit(1)
 
-    print('[*] Attempting to fingerprint...')
+    logger.debug('[*] Attempting to fingerprint...')
     result = g.execute(url)
 
     if result:
@@ -135,21 +131,22 @@ def main():
       ref = get_engines()[result]['ref']
       technologies = ', '.join(get_engines()[result]['technology'])
       fingerprint = name
-      print(bcolors.OKGREEN + '[*] Discovered GraphQL Engine: ({})'.format(name))
-      print('[!] Attack Surface Matrix: {}'.format(ref))
-      print('[!] Technologies: {}'.format(technologies))
-      print('[!] Homepage: {}'.format(url))
+      logger.info(f'[*] Discovered GraphQL Engine: ({name})')
+      logger.info(f'[!] Attack Surface Matrix: {ref}')
+      logger.info(f'[!] Technologies: {technologies}')
+      logger.info(f'[!] Homepage: {url}')
     else:
-      print('[x] Nothing was found :-(')
+      logger.info('[x] Nothing was found :-(')
 
     if options.output_file:
       f = open(options.output_file, 'w')
       f.write('url,detected_engine,timestamp\n')
-      f.write('{},{},{}\n'.format(url_netloc, fingerprint, get_time()))
+      f.write(f'{url_netloc},{fingerprint},{get_time()}\n')
       f.close()
     
-    print(bcolors.ENDC + '[*] Completed.')
+    logger.debug('[*] Completed.')
 
 if __name__ == '__main__':
+    setup_logger()
     main()
     

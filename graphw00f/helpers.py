@@ -2,15 +2,11 @@
 import datetime
 import os.path
 from urllib.parse import urlparse
+
 from version import VERSION
 
-class bcolors:
-  OKBLUE = '\033[94m'
-  OKCYAN = '\033[96m'
-  OKGREEN = '\033[92m'
-  WARNING = '\033[93m'
-  FAIL = '\033[91m'
-  ENDC = '\033[0m'
+from .logger import logger
+
 
 def read_custom_wordlist(location):
   wordlists = set()
@@ -22,7 +18,7 @@ def read_custom_wordlist(location):
 
       wordlists.add(line)
   else:
-    print('Could not find wordlist file: {}'.format(location))
+    logger.error('Could not find wordlist file: {location}')
   return wordlists
 
 def error_contains(response, word_to_match, part='message'):
@@ -38,7 +34,7 @@ def get_time():
   return datetime.datetime.now().strftime('%Y-%m-%d')
 
 def draw_art():
-  return '''
+  return f'''
                 +-------------------+
                 |     graphw00f     |
                 +-------------------+
@@ -55,10 +51,10 @@ def draw_art():
                     |   Node Z   |
                     +------------+
 
-                graphw00f - v{version}
+                graphw00f - v{VERSION}
           The fingerprinting tool for GraphQL
            Dolev Farhi <dolev@lethalbit.com>
-  '''.format(version=VERSION)
+  '''
 
 def possible_graphql_paths():
   return [
