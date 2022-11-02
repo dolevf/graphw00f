@@ -1,8 +1,6 @@
-
+import sys
 import datetime
 import os.path
-from urllib.parse import urlparse
-from version import VERSION
 
 class bcolors:
   OKBLUE = '\033[94m'
@@ -11,6 +9,15 @@ class bcolors:
   WARNING = '\033[93m'
   FAIL = '\033[91m'
   ENDC = '\033[0m'
+
+def get_version():
+  if sys.version_info >= (3, 8):
+    import importlib.metadata
+    return importlib.metadata.version('graphw00f')
+  else:
+    import importlib_metadata
+    return importlib_metadata.version('graphw00f')
+
 
 def read_custom_wordlist(location):
   wordlists = set()
@@ -58,7 +65,7 @@ def draw_art():
                 graphw00f - v{version}
           The fingerprinting tool for GraphQL
            Dolev Farhi <dolev@lethalbit.com>
-  '''.format(version=VERSION)
+  '''.format(version=get_version())
 
 def possible_graphql_paths():
   return [

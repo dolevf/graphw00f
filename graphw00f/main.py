@@ -1,27 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import sys
-import conf
-
-from graphw00f.helpers import (
-  get_time,
-  draw_art,
-  get_engines,
-  user_confirmed,
-  read_custom_wordlist,
-  possible_graphql_paths,
-  bcolors
-)
-
-from time import sleep
-from urllib.parse import urlparse
 from optparse import OptionParser
+from urllib.parse import urlparse
 
-from version import VERSION
-from graphw00f.lib import (
-  GRAPHW00F,
-  GraphQLDetectionFailed
-)
+import graphw00f.conf as conf
+from graphw00f.helpers import bcolors, draw_art, get_engines, get_time, possible_graphql_paths, read_custom_wordlist, user_confirmed, get_version
+from graphw00f.lib import GRAPHW00F, GraphQLDetectionFailed
 
 
 def main():
@@ -56,7 +41,7 @@ def main():
       sys.exit(0)
 
     if options.version:
-      print('version:', VERSION)
+      print('version:', get_version())
       sys.exit(0)
 
     if not options.url:
@@ -150,6 +135,3 @@ def main():
     
     print(bcolors.ENDC + '[*] Completed.')
 
-if __name__ == '__main__':
-    main()
-    
