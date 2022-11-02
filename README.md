@@ -74,7 +74,7 @@ The graphw00f project uses the [GraphQL Threat Matrix Project](https://github.co
 
 # Installation
 ## Clone Repository
-`git clone git@github.com:dolevf/graphw00f.git`
+`git clone https://github.com/dolevf/graphw00f.git`
 
 ## Run graphw00f
 `python3 main.py -h`
