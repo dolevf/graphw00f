@@ -14,12 +14,14 @@ class GRAPHW00F:
   def __init__(self, headers,
                      cookies,
                      timeout,
+                     proxies,
                      follow_redirects=False):
     self.url = 'http://example.com'
     self.cookies = cookies
     self.headers = headers
     self.follow_redirects = follow_redirects,
     self.timeout = timeout
+    self.proxies = proxies
 
   def check(self, url):
     query = '''
@@ -109,6 +111,7 @@ class GRAPHW00F:
                              verify=False,
                              allow_redirects=self.follow_redirects,
                              timeout=self.timeout,
+                             proxies=self.proxies,
                              json={operation:payload})
       return response.json()
     except:

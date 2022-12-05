@@ -32,6 +32,9 @@ def main():
     parser.add_option('-t', '--target', dest='url', help='target url with the path')
     parser.add_option('-f', '--fingerprint', dest='fingerprint', default=False, action='store_true', help='fingerprint mode')
     parser.add_option('-d', '--detect', dest='detect', default=False, action='store_true', help='detect mode')
+    parser.add_option('-p', '--proxy', dest='proxy', default=None, help='HTTP(S) proxy URL in the form http://user:pass@host:port')
+    parser.add_option('-b', '--burp', dest='burp', default=False, action='store_true',
+                            help='Sets the proxy to http://127.0.0.1:8080. Overridden by --proxy')
     parser.add_option('-T', '--timeout', dest='timeout', default=10, help='Request timeout in seconds')
     parser.add_option('-o', '--output-file', dest='output_file',
                             help='Output results to a file (CSV)', default=None)
@@ -67,13 +70,28 @@ def main():
       parser.print_help()
       sys.exit(1)
 
+    proxies = None
+
+    if options.burp:
+      proxies = {
+          'http': 'http://127.0.0.1:8080',
+          'https': 'https://127.0.0.1:8080'
+      }
+
+    if options.proxy:
+      proxies = {
+          'http': options.proxy,
+          'https': options.proxy
+      }
+
     if not isinstance(options.timeout, int):
       options.timeout = 10
 
     g = GRAPHW00F(follow_redirects=options.followredirect,
                   headers=conf.HEADERS if not options.useragent else {**conf.HEADERS, **{'User-Agent': options.useragent}},
                   cookies=conf.COOKIES,
-                  timeout=options.timeout)
+                  timeout=options.timeout,
+                  proxies=proxies)
     url = options.url
 
     url_scheme = urlparse(url).scheme
@@ -89,6 +107,9 @@ def main():
     if not url_netloc:
       print('url {url} does not seem right.'.format(url=url))
       sys.exit(1)
+
+    if options.burp and options.proxy:
+      print(bcolors.WARNING + '[!] Both --proxy and --burp options supplied, overriding --burp.' + bcolors.ENDC)
 
     if options.detect:
       if options.wordlist:
