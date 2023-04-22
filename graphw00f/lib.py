@@ -68,7 +68,7 @@ class GRAPHW00F:
     elif self.engine_apollo():
       return 'apollo'
     elif self.engine_awsappsync():
-        return 'aws-appsync'
+      return 'aws-appsync'
     elif self.engine_hasura():
       return 'hasura'
     elif self.engine_wpgraphql():
