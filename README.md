@@ -77,8 +77,6 @@ The graphw00f project uses the [GraphQL Threat Matrix Project](https://github.co
 `git clone https://github.com/dolevf/graphw00f.git`
 
 ## Run graphw00f
-`python3 main.py -h`
-
 ```
 Usage: main.py -d -f -t http://example.com
 
@@ -88,17 +86,23 @@ Options:
   -t URL, --target=URL  target url with the path
   -f, --fingerprint     fingerprint mode
   -d, --detect          detect mode
+  -p PROXY, --proxy=PROXY
+                        HTTP(S) proxy URL in the form
+                        http://user:pass@host:port
   -T TIMEOUT, --timeout=TIMEOUT
                         Request timeout in seconds
   -o OUTPUT_FILE, --output-file=OUTPUT_FILE
                         Output results to a file (CSV)
   -l, --list            List all GraphQL technologies graphw00f is able to
                         detect
-  -w WORDLIST, --wordlist=WORDLIST
-                        Path to a list of custom GraphQL endpoints
   -u USERAGENT, --user-agent=USERAGENT
                         Custom user-agent to use (overrides the one from
                         headers configuration)
+  -H HEADER, --header=HEADER
+                        Custom headers to send (e.g. "Authorization: Bearer
+                        ey...").
+  -w WORDLIST, --wordlist=WORDLIST
+                        Path to a list of custom GraphQL endpoints
   -v, --version         Print out the current version and exit.
 ```
 
