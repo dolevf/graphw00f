@@ -39,6 +39,7 @@ def main():
     parser.add_option('-l', '--list', dest='list', action='store_true', default=False,
                             help='List all GraphQL technologies graphw00f is able to detect')
     parser.add_option('-u', '--user-agent', dest='useragent', default=None, help='Custom user-agent to use (overrides the one from headers configuration)')
+    parser.add_option('-H', '--header', dest='header', action='append', default=None, help='Custom headers to send (e.g. "Authorization: Bearer ey...").')
     parser.add_option('-w', '--wordlist', dest='wordlist', default=False, help='Path to a list of custom GraphQL endpoints')
     parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                             help='Print out the current version and exit.')
@@ -78,8 +79,16 @@ def main():
     if not isinstance(options.timeout, int):
       options.timeout = 10
 
+    headers = {}
+    if not options.useragent:
+      headers["User-Agent"] = conf.HEADERS["User-Agent"]
+    else:
+      headers["User-Agent"] = options.useragent
+    for header in options.header:
+      key, value = header.split(": ")
+      headers[key] = value
     g = GRAPHW00F(follow_redirects=options.followredirect,
-                  headers=conf.HEADERS if not options.useragent else {**conf.HEADERS, **{'User-Agent': options.useragent}},
+                  headers=headers,
                   cookies=conf.COOKIES,
                   timeout=options.timeout,
                   proxies=proxies)
