@@ -174,7 +174,7 @@ class GRAPHW00F:
         return True
     query = '''
      query {
-       aa
+       aaa
       }
     '''
     response = self.graph_query(self.url, payload=query)
