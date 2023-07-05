@@ -101,7 +101,7 @@ class GRAPHW00F:
       return 'tartiflette'
     elif self.engine_directus():
       return 'directus'
-    if self.engine_absinthe():
+    elif self.engine_absinthe():
       return 'absinthe-graphql'
 
     return None
