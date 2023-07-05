@@ -43,64 +43,67 @@ class GRAPHW00F:
 
   def execute(self, url):
     self.url = url
-    if self.engine_lighthouse():
-      return 'lighthouse'
-    elif self.engine_caliban():
-      return 'caliban'
-    elif self.engine_lacinia():
-      return 'lacinia'
-    elif self.engine_jaal():
-      return 'jaal'
-    elif self.engine_morpheus():
-      return 'morpheus-graphql'
-    elif self.engine_mercurius():
-      return 'mercurius-graphql'
-    elif self.engine_graphql_yoga():
-      return 'graphql_yoga'
-    elif self.engine_agoo():
-      return 'agoo'
-    elif self.engine_dgraph():
-      return 'dgraph'
-    elif self.engine_graphene():
-      return 'graphene'
-    elif self.engine_ariadne():
-      return 'ariadne'
-    elif self.engine_apollo():
-      return 'apollo'
-    elif self.engine_awsappsync():
-      return 'aws-appsync'
-    elif self.engine_hasura():
-      return 'hasura'
-    elif self.engine_wpgraphql():
-      return 'wpgraphql'
-    elif self.engine_graphqlapiforwp():
-      return 'graphql-api-for-wp'
-    elif self.engine_graphqljava():
-      return 'graphql-java'
-    elif self.engine_hypergraphql():
-      return 'hypergraphql'
-    elif self.engine_ruby():
-      return 'ruby-graphql'
-    elif self.engine_graphqlphp():
-      return 'graphql-php'
-    elif self.engine_gqlgen():
-      return 'gqlgen'
-    elif self.engine_graphqlgo():
-      return 'graphql-go'
-    elif self.engine_juniper():
-      return 'juniper'
-    elif self.engine_sangria():
-      return 'sangria'
-    elif self.engine_flutter():
-      return 'flutter'
-    elif self.engine_dianajl():
-      return 'dianajl'
-    elif self.engine_strawberry():
-      return 'strawberry'
-    elif self.engine_tartiflette():
-      return 'tartiflette'
-    elif self.engine_directus():
-      return 'directus'
+    # if self.engine_lighthouse():
+    #   return 'lighthouse'
+    # elif self.engine_caliban():
+    #   return 'caliban'
+    # elif self.engine_lacinia():
+    #   return 'lacinia'
+    # elif self.engine_jaal():
+    #   return 'jaal'
+    # elif self.engine_morpheus():
+    #   return 'morpheus-graphql'
+    # elif self.engine_mercurius():
+    #   return 'mercurius-graphql'
+    # elif self.engine_graphql_yoga():
+    #   return 'graphql_yoga'
+    # elif self.engine_agoo():
+    #   return 'agoo'
+    # elif self.engine_dgraph():
+    #   return 'dgraph'
+    # elif self.engine_graphene():
+    #   return 'graphene'
+    # elif self.engine_ariadne():
+    #   return 'ariadne'
+    # elif self.engine_apollo():
+    #   return 'apollo'
+    # elif self.engine_awsappsync():
+    #   return 'aws-appsync'
+    # elif self.engine_hasura():
+    #   return 'hasura'
+    # elif self.engine_wpgraphql():
+    #   return 'wpgraphql'
+    # elif self.engine_graphqlapiforwp():
+    #   return 'graphql-api-for-wp'
+    # elif self.engine_graphqljava():
+    #   return 'graphql-java'
+    # elif self.engine_hypergraphql():
+    #   return 'hypergraphql'
+    # elif self.engine_ruby():
+    #   return 'ruby-graphql'
+    # elif self.engine_graphqlphp():
+    #   return 'graphql-php'
+    # elif self.engine_gqlgen():
+    #   return 'gqlgen'
+    # elif self.engine_graphqlgo():
+    #   return 'graphql-go'
+    # elif self.engine_juniper():
+    #   return 'juniper'
+    # elif self.engine_sangria():
+    #   return 'sangria'
+    # elif self.engine_flutter():
+    #   return 'flutter'
+    # elif self.engine_dianajl():
+    #   return 'dianajl'
+    # elif self.engine_strawberry():
+    #   return 'strawberry'
+    # elif self.engine_tartiflette():
+    #   return 'tartiflette'
+    # elif self.engine_directus():
+    #   return 'directus'
+    if self.engine_absinthe():
+      return 'absinthe-graphql'
+
     return None
 
   def graph_query(self, url, operation='query', payload={}):
@@ -116,7 +119,7 @@ class GRAPHW00F:
       return response.json()
     except:
       return {}
- 
+
   def engine_graphql_yoga(self):
     query = '''
       subscription {
@@ -597,7 +600,7 @@ class GRAPHW00F:
     if error_contains(response, 'Internal server error') or error_contains(response, 'internal', part='category'):
       return True
 
-    return False 
+    return False
 
   def engine_agoo(self):
     query = '''
@@ -645,7 +648,7 @@ class GRAPHW00F:
         return True
 
     return False
-    
+
   def engine_jaal(self):
     query = '''{}'''
     response = self.graph_query(self.url, payload=query, operation='{}')
@@ -672,6 +675,20 @@ class GRAPHW00F:
 
     if error_contains(response, 'Fragment \'woof\' is not used in any spread'):
       return True
+
+    return False
+
+  def engine_absinthe(self):
+    query = '''
+      query {
+        graphw00f
+      }
+    '''
+
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'Cannot query field \"graphw00f\" on type \"RootQueryType\".'):
+        return True
 
     return False
 
