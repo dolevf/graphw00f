@@ -255,7 +255,7 @@ def get_engines():
       'url':'https://github.com/appointy/jaal',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/jaal',
       'technology':['Golang']
-    }
+    },
   }
 
 def user_confirmed(choice):

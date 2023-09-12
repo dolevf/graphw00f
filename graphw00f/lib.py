@@ -101,6 +101,9 @@ class GRAPHW00F:
       return 'tartiflette'
     elif self.engine_directus():
       return 'directus'
+    elif self.engine_absinthe():
+      return 'absinthe-graphql'
+
     return None
 
   def graph_query(self, url, operation='query', payload={}):
@@ -116,7 +119,7 @@ class GRAPHW00F:
       return response.json()
     except:
       return {}
- 
+
   def engine_graphql_yoga(self):
     query = '''
       subscription {
@@ -597,7 +600,7 @@ class GRAPHW00F:
     if error_contains(response, 'Internal server error') or error_contains(response, 'internal', part='category'):
       return True
 
-    return False 
+    return False
 
   def engine_agoo(self):
     query = '''
@@ -645,7 +648,7 @@ class GRAPHW00F:
         return True
 
     return False
-    
+
   def engine_jaal(self):
     query = '''{}'''
     response = self.graph_query(self.url, payload=query, operation='{}')
@@ -672,6 +675,20 @@ class GRAPHW00F:
 
     if error_contains(response, 'Fragment \'woof\' is not used in any spread'):
       return True
+
+    return False
+
+  def engine_absinthe(self):
+    query = '''
+      query {
+        graphw00f
+      }
+    '''
+
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'Cannot query field \"graphw00f\" on type \"RootQueryType\".'):
+        return True
 
     return False
 
