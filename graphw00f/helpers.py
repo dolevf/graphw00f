@@ -229,7 +229,7 @@ def get_engines():
     'mercurius':{
       'name':'mercurius',
       'url':'https://github.com/mercurius-js/mercurius',
-      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/agoo.md',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/mercurius.md',
       'technology':['JavaScript', 'Node.js', 'TypeScript']
     },
     'morpheus-graphql':{
