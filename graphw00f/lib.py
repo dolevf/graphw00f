@@ -54,7 +54,7 @@ class GRAPHW00F:
     elif self.engine_morpheus():
       return 'morpheus-graphql'
     elif self.engine_mercurius():
-      return 'mercurius-graphql'
+      return 'mercurius'
     elif self.engine_graphql_yoga():
       return 'graphql_yoga'
     elif self.engine_agoo():
