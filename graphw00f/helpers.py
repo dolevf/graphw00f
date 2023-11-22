@@ -131,7 +131,7 @@ def get_engines():
       'technology':['Python']
     },
     'graphql-api-for-wp':{
-      'name':'GraphQL API for Wordpress',
+      'name':'GraphQL API for Wordpress (Gato GraphQL)',
       'url':'https://graphql-api.com',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-api-for-wp.md',
       'technology':['PHP'],
