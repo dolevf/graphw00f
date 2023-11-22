@@ -40,6 +40,7 @@ graphw00f currently attempts to discover the following GraphQL engines:
 * gqlgen - Go
 * WPGraphQL - PHP
 * GraphQL API for Wordpress - PHP
+* Gato GraphQL - PHP
 * graphql-ruby - Ruby
 * graphql-php - PHP
 * Hasura - Haskell
