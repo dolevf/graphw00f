@@ -103,6 +103,8 @@ class GRAPHW00F:
       return 'directus'
     elif self.engine_absinthe():
       return 'absinthe-graphql'
+    elif self.engine_graphqldotnet():
+      return 'graphql-dotnet'
 
     return None
 
@@ -692,3 +694,7 @@ class GRAPHW00F:
 
     return False
 
+  def engine_graphqldotnet(self):
+      query = 'query @skip { __typename }'
+      response = self.graph_query(self.url, payload=query)
+      return error_contains(response, 'Directive \'skip\' may not be used on Query.')

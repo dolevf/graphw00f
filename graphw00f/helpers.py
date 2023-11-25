@@ -262,6 +262,12 @@ def get_engines():
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/absinthe-graphql.md',
       'technology':['Elixir']
     },
+    'graphql-dotnet':{
+      'name':'graphql-dotnet',
+      'url':'https://github.com/graphql-dotnet/graphql-dotnet',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-dotnet.md',
+      'technology':['C#', '.NET']
+    },
   }
 
 def user_confirmed(choice):
