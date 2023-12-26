@@ -77,7 +77,8 @@ def possible_graphql_paths():
     '/playground',
     '/gql',
     '/query',
-    '/index.php?graphql'
+    '/index.php?graphql',
+    '/rpc/graphql'
   ]
 
 def get_engines():
@@ -268,6 +269,12 @@ def get_engines():
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-dotnet.md',
       'technology':['C#', '.NET']
     },
+    'pg_graphql':{
+      'name':'pg_graphql',
+      'url':'https://supabase.github.io/pg_graphql',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/pg_graphql.md'  ,
+      'technology':['Rust']
+    }
   }
 
 def user_confirmed(choice):

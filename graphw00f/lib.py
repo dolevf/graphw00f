@@ -105,6 +105,8 @@ class GRAPHW00F:
       return 'absinthe-graphql'
     elif self.engine_graphqldotnet():
       return 'graphql-dotnet'
+    elif self.engine_pggraphql():
+      return 'pg_graphql'
 
     return None
 
@@ -695,6 +697,15 @@ class GRAPHW00F:
     return False
 
   def engine_graphqldotnet(self):
-      query = 'query @skip { __typename }'
-      response = self.graph_query(self.url, payload=query)
-      return error_contains(response, 'Directive \'skip\' may not be used on Query.')
+    query = 'query @skip { __typename }'
+    response = self.graph_query(self.url, payload=query)
+    return error_contains(response, 'Directive \'skip\' may not be used on Query.')
+  
+  def engine_pggraphql(self):
+    query = '''query { __typename @skip(aa:true) }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Unknown argument to @skip: aa'):
+      return True
+    
+    return False
