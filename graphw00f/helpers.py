@@ -274,6 +274,12 @@ def get_engines():
       'url':'https://supabase.github.io/pg_graphql',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/pg_graphql.md'  ,
       'technology':['Rust']
+    },
+    'tailcall':{
+      'name':'tailcall',
+      'url':'https://tailcall.run',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/tailcall.md',
+      'technology':['Rust']
     }
   }
 

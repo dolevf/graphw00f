@@ -59,6 +59,8 @@ class GRAPHW00F:
       return 'graphql_yoga'
     elif self.engine_agoo():
       return 'agoo'
+    elif self.engine_tailcall():
+      return 'tailcall'
     elif self.engine_dgraph():
       return 'dgraph'
     elif self.engine_graphene():
@@ -559,6 +561,20 @@ class GRAPHW00F:
       return True
 
     return False
+
+  def engine_tailcall(self):
+    query = '''
+      aa {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+
+    if error_contains(response, 'expected executable_definition'):
+      return True
+
+    return False
+
 
   def engine_dgraph(self):
     query = '''
