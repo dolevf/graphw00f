@@ -29,10 +29,23 @@ class GRAPHW00F:
         __typename
       }
     '''
+    introspection_query = '''
+      query {
+        __schema {
+          types {
+            name
+          }
+        }
+      }
+    '''
     response = self.graph_query(url, payload=query)
+    introspection_response = self.graph_query(url, payload=introspection_query)
 
     if response.get('data'):
       if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
+        return True
+    if introspection_response.get('data'):
+      if introspection_response.get('data', {}).get('__schema', '') in ('Query', 'QueryRoot', 'query_root'):
         return True
     elif response.get('errors') and (any('locations' in i for i in response['errors']) or (any('extensions' in i for i in response))):
       return True
@@ -59,8 +72,6 @@ class GRAPHW00F:
       return 'graphql_yoga'
     elif self.engine_agoo():
       return 'agoo'
-    elif self.engine_tailcall():
-      return 'tailcall'
     elif self.engine_dgraph():
       return 'dgraph'
     elif self.engine_graphene():
@@ -561,20 +572,6 @@ class GRAPHW00F:
       return True
 
     return False
-
-  def engine_tailcall(self):
-    query = '''
-      aa {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'expected executable_definition'):
-      return True
-
-    return False
-
 
   def engine_dgraph(self):
     query = '''
