@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 from graphw00f.helpers import error_contains
 
@@ -9,6 +9,21 @@ class GraphQLDetectionFailed(Exception):
 
 class GraphQLError(Exception):
   pass
+class GraphQLQuery:
+    def __init__(self, name, query, expected_response):
+        self.name = name
+        self.query = query
+        self.expected_response = expected_response
+
+    def __repr__(self):
+        return f"GraphQLQuery(name={self.name}, query={self.query}, expected_response={self.expected_response})"
+
+    @classmethod
+    def from_json(cls, json_file):
+        with open(json_file, 'r') as file:
+            data = json.load(file)
+        queries = data['queries']
+        return [cls(query['name'], query['query'], query['expected_response']) for query in queries]
 
 class GRAPHW00F:
   def __init__(self, headers,
@@ -24,20 +39,19 @@ class GRAPHW00F:
     self.proxies = proxies
 
   def check(self, url):
-    query = '''
-      query {
-        __typename
-      }
-    '''
-    response = self.graph_query(url, payload=query)
+    # Parse JSON file and create list of GraphQLQuery objects
+    query_objects = GraphQLQuery.from_json('queries.json')
 
-    if response.get('data'):
-      if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
+    # Check for each query in Query Objects
+    for query_object in query_objects:
+      response = self.graph_query(url, payload=query_object.query)
+      if response.get('data'):
+        if response.get('data', {}).get(query_object.expected_response, '') in ('Query', 'QueryRoot', 'query_root'):
+          return True
+      elif response.get('errors') and (any('locations' in i for i in response['errors']) or any('extensions' in i for i in response['errors'])):
         return True
-    elif response.get('errors') and (any('locations' in i for i in response['errors']) or any('extensions' in i for i in response['errors'])):
-      return True
-    elif response.get('data'):
-      return True
+      elif response.get('data'):
+        return True
     else:
       raise GraphQLDetectionFailed
 
