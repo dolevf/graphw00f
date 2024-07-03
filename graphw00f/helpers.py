@@ -26,12 +26,19 @@ def read_custom_wordlist(location):
   return wordlists
 
 def error_contains(response, word_to_match, part='message'):
-  if isinstance(response, dict):
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get(part, '')
-        if word_to_match in err_message:
-          return True
+    word_to_match = word_to_match.lower() 
+    
+    if isinstance(response, dict):
+        errors = response.get('errors', [])
+        if isinstance(errors, list):
+            return any(
+                word_to_match in (error.get(part, '') if isinstance(error, dict) else str(error)).lower()
+                for error in errors
+            )
+        elif isinstance(errors, str):
+            return word_to_match in errors.lower()
+    elif isinstance(response, str):
+        return word_to_match in response.lower()
     return False
 
 def get_time():
