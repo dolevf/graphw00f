@@ -1,0 +1,14 @@
+{
+    "queries": [
+        {
+            "name": "typenameQuery",
+            "query":"query{__typename}",
+            "expected_response":"__typename"
+        },
+        {
+            "name": "introspectionQuery",
+            "query": "query { __schema {types {name}}}",
+            "expected_response": "__schema"
+        }
+    ]
+}
