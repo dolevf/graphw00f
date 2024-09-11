@@ -290,6 +290,12 @@ def get_engines():
       'url':'https://tailcall.run',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/tailcall.md',
       'technology':['Rust']
+    },
+    'hotchocolate':{
+      'name':'hotchocolate',
+      'url':'https://chillicream.com/docs/hotchocolate/v13',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/hotchocolate.md',
+      'technology':['C#', '.NET']
     }
   }
 
