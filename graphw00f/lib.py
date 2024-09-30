@@ -34,7 +34,7 @@ class GRAPHW00F:
     if response.get('data'):
       if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
         return True
-    elif response.get('errors') and (any('locations' in i for i in response['errors']) or (any('extensions' in i for i in response))):
+    elif response.get('errors') and (any('locations' in i for i in response['errors']) or any('extensions' in i for i in response['errors'])):
       return True
     elif response.get('data'):
       return True
@@ -109,6 +109,8 @@ class GRAPHW00F:
       return 'graphql-dotnet'
     elif self.engine_pggraphql():
       return 'pg_graphql'
+    elif self.engine_hotchocolate():
+      return 'hotchocolate'
 
     return None
 
@@ -724,4 +726,25 @@ class GRAPHW00F:
     if error_contains(response, 'Unknown argument to @skip: aa'):
       return True
     
+    return False
+
+  def engine_hotchocolate(self):
+    query = '''
+    queryy  {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Unexpected token: Name.'):
+      return True
+
+    query = '''
+    query @aaa@aaa {
+        __typename
+      }
+    '''
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'The specified directive `aaa` is not supported by the current schema.'):
+      return True
+
     return False

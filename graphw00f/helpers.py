@@ -26,12 +26,19 @@ def read_custom_wordlist(location):
   return wordlists
 
 def error_contains(response, word_to_match, part='message'):
-  if isinstance(response, dict):
-    if response.get('errors'):
-      for i in response['errors']:
-        err_message = i.get(part, '')
-        if word_to_match in err_message:
-          return True
+    word_to_match = word_to_match.lower() 
+    
+    if isinstance(response, dict):
+        errors = response.get('errors', [])
+        if isinstance(errors, list):
+            return any(
+                word_to_match in (error.get(part, '') if isinstance(error, dict) else str(error)).lower()
+                for error in errors
+            )
+        elif isinstance(errors, str):
+            return word_to_match in errors.lower()
+    elif isinstance(response, str):
+        return word_to_match in response.lower()
     return False
 
 def get_time():
@@ -71,6 +78,9 @@ def possible_graphql_paths():
     '/v1/graphiql',
     '/v2/graphiql',
     '/v3/graphiql',
+    '/graphql/v1',
+    '/graphql/v2',
+    '/graphql/v3',
     '/api/graphql',
     '/api/graphiql',
     '/console',
@@ -280,6 +290,12 @@ def get_engines():
       'url':'https://tailcall.run',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/tailcall.md',
       'technology':['Rust']
+    },
+    'hotchocolate':{
+      'name':'hotchocolate',
+      'url':'https://chillicream.com/docs/hotchocolate/v13',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/hotchocolate.md',
+      'technology':['C#', '.NET']
     }
   }
 
