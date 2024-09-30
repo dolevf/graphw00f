@@ -87,6 +87,11 @@ def main():
     for header in options.header:
       key, value = header.split(": ")
       headers[key] = value
+
+    # Read configuration headers
+    for header in conf.HEADERS:
+        headers[header] = conf.HEADERS[header]
+
     g = GRAPHW00F(follow_redirects=options.followredirect,
                   headers=headers,
                   cookies=conf.COOKIES,
