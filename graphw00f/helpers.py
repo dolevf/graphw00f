@@ -296,6 +296,12 @@ def get_engines():
       'url':'https://chillicream.com/docs/hotchocolate/v13',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/hotchocolate.md',
       'technology':['C#', '.NET']
+    },
+    'inigo':{
+      'name':'inigo',
+      'url':'https://inigo.io',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/inigo.md',
+      'technology':['Go']
     }
   }
 

@@ -43,7 +43,9 @@ class GRAPHW00F:
 
   def execute(self, url):
     self.url = url
-    if self.engine_lighthouse():
+    if self.engine_inigo():
+      return 'inigo'
+    elif self.engine_lighthouse():
       return 'lighthouse'
     elif self.engine_caliban():
       return 'caliban'
@@ -748,3 +750,17 @@ class GRAPHW00F:
       return True
 
     return False
+  
+  def engine_inigo(self):
+      query = '''
+      query  {
+          __typename
+        }
+      '''
+      response = self.graph_query(self.url, payload=query)
+      if 'extensions' in response and 'inigo' in response['extensions']:
+          return True
+
+      return False
+    
+  
