@@ -30,7 +30,6 @@ class GRAPHW00F:
       }
     '''
     response = self.graph_query(url, payload=query)
-
     if response.get('data'):
       if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
         return True
@@ -118,7 +117,8 @@ class GRAPHW00F:
 
   def graph_query(self, url, operation='query', payload={}):
     try:
-      response = requests.post(url,
+      # GraphQL may support POST or GET, or both. Choose the one that returns a JSON.
+      response_post = requests.post(url,
                              headers=self.headers,
                              cookies=self.cookies,
                              verify=False,
@@ -126,7 +126,20 @@ class GRAPHW00F:
                              timeout=self.timeout,
                              proxies=self.proxies,
                              json={operation:payload})
-      return response.json()
+      response_get = requests.get(url,
+                             headers=self.headers,
+                             cookies=self.cookies,
+                             verify=False,
+                             allow_redirects=self.follow_redirects,
+                             timeout=self.timeout,
+                             proxies=self.proxies,
+                             params={operation:payload})
+      if isinstance(response_post.json(), dict):
+        return response_post.json()
+      elif isinstance(response_get.json(), dict):
+        return response_get.json()
+      else:
+        return {}
     except:
       return {}
 
