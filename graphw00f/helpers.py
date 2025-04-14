@@ -70,6 +70,7 @@ def draw_art():
 def possible_graphql_paths():
   return [
     '/',
+    '/api',
     '/graphql',
     '/graphiql',
     '/v1/graphql',
