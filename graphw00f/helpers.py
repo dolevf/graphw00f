@@ -303,6 +303,12 @@ def get_engines():
       'url':'https://inigo.io',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/inigo.md',
       'technology':['Go']
+    },
+    'ballerina':{
+       'name':'ballerina',
+       'url':'https://github.com/ballerina-platform/module-ballerina-graphql',
+       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/ballerina.md',
+       'technology':['Ballerina', 'Java']
     }
   }
 

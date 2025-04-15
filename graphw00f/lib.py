@@ -94,8 +94,6 @@ class GRAPHW00F:
       return 'juniper'
     elif self.engine_sangria():
       return 'sangria'
-    elif self.engine_flutter():
-      return 'flutter'
     elif self.engine_dianajl():
       return 'dianajl'
     elif self.engine_strawberry():
@@ -112,7 +110,11 @@ class GRAPHW00F:
       return 'pg_graphql'
     elif self.engine_hotchocolate():
       return 'hotchocolate'
-
+    elif self.engine_ballerina():
+      return 'ballerina'
+    elif self.engine_flutter():
+      return 'flutter'
+    
     return None
 
   def graph_query(self, url, operation='query', payload={}):
@@ -775,5 +777,26 @@ class GRAPHW00F:
           return True
 
       return False
+  
+  def engine_ballerina(self):
+    query = '''
+    query {
+      __typename
+      ...A
+    }
+
+    fragment A on Query {
+      ...B
+    }
+
+    fragment B on Query {
+      ...A
+    }
+    '''
     
+    response = self.graph_query(self.url, payload=query)
+    if error_contains(response, 'Cannot spread fragment "A" within itself via "B"'):
+        return True
+
+    return False
   
