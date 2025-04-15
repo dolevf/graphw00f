@@ -31,6 +31,9 @@ graphw00f will make use of the GraphQL Threat Matrix project to provide insight 
 
 Specially crafted queries cause different GraphQL server implementations to respond uniquely to queries, mutations and subscriptions, this makes it trivial to fingerprint the backend engine and distinguish between the various GraphQL implementations. (CWE: [CWE-200](https://cwe.mitre.org/data/definitions/200.html))
 
+graphw00f supports detecting and fingerprinting GraphQL servers that make use of either GET or POST-based querying.
+
+
 # Detections
 graphw00f currently attempts to discover the following GraphQL engines:
 * Graphene - Python
