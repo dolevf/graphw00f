@@ -1,14 +1,27 @@
 import requests
 
+from collections import defaultdict
+
 from graphw00f.helpers import error_contains
+from graphw00f.matcher import (
+  PROBES,
+  SIGNALS,
+  FAMILY_FALLBACK,
+  UNIQUE,
+  STRONG,
+  FAMILY,
+)
 
 requests.packages.urllib3.disable_warnings()
+
 
 class GraphQLDetectionFailed(Exception):
   pass
 
+
 class GraphQLError(Exception):
   pass
+
 
 class GRAPHW00F:
   def __init__(self, headers,
@@ -19,19 +32,22 @@ class GRAPHW00F:
     self.url = 'http://example.com'
     self.cookies = cookies
     self.headers = headers
-    self.follow_redirects = follow_redirects,
+    self.follow_redirects = follow_redirects
     self.timeout = timeout
     self.proxies = proxies
+    # populated by the last detect_engine() run, for verbose output
+    self.last_result = None
 
+  # ---------------------------------------------------------------- detection
   def check(self, url):
     query = '''
       query {
         __typename
       }
     '''
-    response = self.graph_query(url, payload=query)
+    response, _ = self.graph_query_full(url, payload=query)
     if response.get('data'):
-      if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
+      if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root', 'RootQuery', 'RootQueryType'):
         return True
     elif response.get('errors') and (any('locations' in i for i in response['errors']) or any('extensions' in i for i in response['errors'])):
       return True
@@ -41,85 +57,20 @@ class GRAPHW00F:
       raise GraphQLDetectionFailed
 
   def execute(self, url):
-    self.url = url
-    if self.engine_inigo():
-      return 'inigo'
-    elif self.engine_lighthouse():
-      return 'lighthouse'
-    elif self.engine_caliban():
-      return 'caliban'
-    elif self.engine_lacinia():
-      return 'lacinia'
-    elif self.engine_jaal():
-      return 'jaal'
-    elif self.engine_morpheus():
-      return 'morpheus-graphql'
-    elif self.engine_mercurius():
-      return 'mercurius'
-    elif self.engine_graphql_yoga():
-      return 'graphql_yoga'
-    elif self.engine_agoo():
-      return 'agoo'
-    elif self.engine_tailcall():
-      return 'tailcall'
-    elif self.engine_dgraph():
-      return 'dgraph'
-    elif self.engine_graphene():
-      return 'graphene'
-    elif self.engine_ariadne():
-      return 'ariadne'
-    elif self.engine_apollo():
-      return 'apollo'
-    elif self.engine_awsappsync():
-      return 'aws-appsync'
-    elif self.engine_hasura():
-      return 'hasura'
-    elif self.engine_wpgraphql():
-      return 'wpgraphql'
-    elif self.engine_graphqlapiforwp():
-      return 'graphql-api-for-wp'
-    elif self.engine_graphqljava():
-      return 'graphql-java'
-    elif self.engine_hypergraphql():
-      return 'hypergraphql'
-    elif self.engine_ruby():
-      return 'ruby-graphql'
-    elif self.engine_graphqlphp():
-      return 'graphql-php'
-    elif self.engine_gqlgen():
-      return 'gqlgen'
-    elif self.engine_graphqlgo():
-      return 'graphql-go'
-    elif self.engine_juniper():
-      return 'juniper'
-    elif self.engine_sangria():
-      return 'sangria'
-    elif self.engine_dianajl():
-      return 'dianajl'
-    elif self.engine_strawberry():
-      return 'strawberry'
-    elif self.engine_tartiflette():
-      return 'tartiflette'
-    elif self.engine_directus():
-      return 'directus'
-    elif self.engine_absinthe():
-      return 'absinthe-graphql'
-    elif self.engine_graphqldotnet():
-      return 'graphql-dotnet'
-    elif self.engine_pggraphql():
-      return 'pg_graphql'
-    elif self.engine_hotchocolate():
-      return 'hotchocolate'
-    elif self.engine_ballerina():
-      return 'ballerina'
-    elif self.engine_flutter():
-      return 'flutter'
-    
-    return None
+    '''Backward-compatible entrypoint: returns a single engine id (or None).'''
+    result = self.detect_engine(url)
+    self.last_result = result
+    return result['engine'] if result else None
 
-  def graph_query(self, url, operation='query', payload={}):
+  # ------------------------------------------------------------- HTTP helpers
+  def graph_query_full(self, url, operation='query', payload={}):
+    '''Send a probe. Returns (json_dict, headers_dict).
+
+    GraphQL may accept POST or GET (or both). We prefer whichever returns a
+    JSON object, and return the matching response's headers so signal
+    evaluation can consult them.
+    '''
     try:
-      # GraphQL may support POST or GET, or both. Choose the one that returns a JSON.
       response_post = requests.post(url,
                              headers=self.headers,
                              cookies=self.cookies,
@@ -127,7 +78,14 @@ class GRAPHW00F:
                              allow_redirects=self.follow_redirects,
                              timeout=self.timeout,
                              proxies=self.proxies,
-                             json={operation:payload})
+                             json={operation: payload})
+      try:
+        pj = response_post.json()
+      except Exception:
+        pj = None
+      if isinstance(pj, dict):
+        return pj, dict(response_post.headers)
+
       response_get = requests.get(url,
                              headers=self.headers,
                              cookies=self.cookies,
@@ -135,668 +93,227 @@ class GRAPHW00F:
                              allow_redirects=self.follow_redirects,
                              timeout=self.timeout,
                              proxies=self.proxies,
-                             params={operation:payload})
-      if isinstance(response_post.json(), dict):
-        return response_post.json()
-      elif isinstance(response_get.json(), dict):
-        return response_get.json()
+                             params={operation: payload})
+      try:
+        gj = response_get.json()
+      except Exception:
+        gj = None
+      if isinstance(gj, dict):
+        return gj, dict(response_get.headers)
+
+      return {}, dict(response_post.headers)
+    except Exception:
+      return {}, {}
+
+  def graph_query(self, url, operation='query', payload={}):
+    '''Legacy shim: returns just the JSON body.'''
+    body, _ = self.graph_query_full(url, operation=operation, payload=payload)
+    return body
+
+  # --------------------------------------------------------------- the engine
+  def _raw_json_query(self, url, body):
+    '''POST an arbitrary JSON body (for wrapper-layer probes). Returns (json, headers).'''
+    try:
+      resp = requests.post(url,
+                           headers=self.headers,
+                           cookies=self.cookies,
+                           verify=False,
+                           allow_redirects=self.follow_redirects,
+                           timeout=self.timeout,
+                           proxies=self.proxies,
+                           json=body)
+      try:
+        j = resp.json()
+      except Exception:
+        j = None
+      return (j if isinstance(j, dict) else {}), dict(resp.headers)
+    except Exception:
+      return {}, {}
+
+  def _html_get(self, url):
+    '''Plain GET of the endpoint to capture an IDE landing page (GraphiQL/Sandbox/Playground).'''
+    try:
+      hdrs = dict(self.headers)
+      hdrs['Accept'] = 'text/html,application/xhtml+xml'
+      resp = requests.get(url,
+                          headers=hdrs,
+                          cookies=self.cookies,
+                          verify=False,
+                          allow_redirects=self.follow_redirects,
+                          timeout=self.timeout,
+                          proxies=self.proxies)
+      return {'__html__': resp.text[:65536]}, dict(resp.headers)
+    except Exception:
+      return {'__html__': ''}, {}
+
+  def _send_probes(self, url):
+    '''Send every probe referenced by the signal table exactly once.'''
+    responses = {}
+    headers = {}
+    used = sorted(set(sig[3] for sig in SIGNALS))
+    for pid in used:
+      probe = PROBES[pid]
+      if isinstance(probe, dict) and '__rawjson__' in probe:
+        body, hdrs = self._raw_json_query(url, probe['__rawjson__'])
+      elif isinstance(probe, dict) and probe.get('__get_html__'):
+        body, hdrs = self._html_get(url)
       else:
-        return {}
-    except:
-      return {}
+        body, hdrs = self.graph_query_full(url, payload=probe)
+      responses[pid] = body if isinstance(body, dict) else {}
+      headers[pid] = hdrs or {}
+    return responses, headers
 
-  def engine_graphql_yoga(self):
-    query = '''
-      subscription {
-         __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'asyncExecutionResult[Symbol.asyncIterator] is not a function') or error_contains(response, 'Unexpected error.'):
-        return True
+  @staticmethod
+  def _walk(obj, path):
+    cur = obj
+    for p in path:
+      if isinstance(p, int):
+        if isinstance(cur, list) and len(cur) > p:
+          cur = cur[p]
+        else:
+          return None
+      else:
+        if isinstance(cur, dict) and p in cur:
+          cur = cur[p]
+        else:
+          return None
+    return cur
 
-    return False
-  def engine_apollo(self):
-    query = '''
-      query @skip {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive "@skip" argument "if" of type "Boolean!" is required, but it was not provided.'):
-      return True
+  def _match(self, sig, responses, headers):
+    engine, family, weight, pid, kind, arg = sig
+    resp = responses.get(pid, {}) or {}
+    hdrs = headers.get(pid, {}) or {}
+    data = resp.get('data') if isinstance(resp, dict) else None
 
-    query = '''
-      query @deprecated {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive "@deprecated" may not be used on QUERY.'):
-      return True
-
-    return False
-
-  def engine_awsappsync(self):
-      query = 'query @skip { __typename }'
-      response = self.graph_query(self.url, payload=query)
-      return error_contains(response, 'MisplacedDirective')
-
-  def engine_graphene(self):
-    query = '''aaa'''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Syntax Error GraphQL (1:1)'):
-      return True
-
-    return False
-
-  def engine_hasura(self):
-    query = '''
-      query @cached {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if response.get('data'):
-      if response.get('data', {}).get('__typename', '') == 'query_root':
-        return True
-    query = '''
-     query {
-       aaa
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'field "aaa" not found in type: \'query_root\''):
-      return True
-
-    query = '''
-      query @skip {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'directive "skip" is not allowed on a query'):
-      return True
-
-    query = '''
-      query {
-        __schema
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'missing selection set for "__Schema"'):
-      return True
-
-    return False
-
-  def engine_graphqlphp(self):
-    query = '''
-      query ! {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Syntax Error: Cannot parse the unexpected character "?".'):
-      return True
-
-    query = '''
-      query @deprecated {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive "deprecated" may not be used on "QUERY".'):
-      return True
-
-    return False
-
-  def engine_ruby(self):
-    query = '''
-     query @skip {
-       __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, '\'@skip\' can\'t be applied to queries (allowed: fields, fragment spreads, inline fragments)'):
-      return True
-    elif error_contains(response, 'Directive \'skip\' is missing required arguments: if'):
-      return True
-
-    query = '''
-     query @deprecated {
-       __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, '\'@deprecated\' can\'t be applied to queries'):
-      return True
-
-    query = '''
-      query {
-       __typename {
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Parse error on "}" (RCURLY)'):
-      return True
-
-    query = '''
-      query {
-        __typename @skip
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive \'skip\' is missing required arguments: if'):
-      return True
-
-    return False
-
-  def engine_hypergraphql(self):
-    query = '''
-     zzz {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Validation error of type InvalidSyntax: Invalid query syntax.'):
-      return True
-
-    query = '''
-      query {
-        alias1:__typename @deprecated
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Validation error of type UnknownDirective: Unknown directive deprecated @ \'__typename\''):
-      return True
-
-    return False
-
-  def engine_graphqljava(self):
-    query = '''
-     queryy  {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Invalid Syntax : offending token \'queryy\''):
-      return True
-
-    query = '''
-     query @aaa@aaa {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Validation error of type DuplicateDirectiveName: Directives must be uniquely named within a location.'):
-      return True
-
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Invalid Syntax : offending token \'<EOF>\''):
-      return True
-
-    return False
-
-  def engine_ariadne(self):
-    query = '''
-      query {
-        __typename @abc
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Unknown directive \'@abc\'.') and 'data' not in response:
-      return True
-
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'The query must be a string.'):
-      return True
-
-    return False
-
-  def engine_graphqlapiforwp(self):
-    query = '''
-     query {
-       alias1$1:__typename
-     }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if response.get('data'):
-      if response.get('data', {}).get('alias1$1', '') == 'QueryRoot':
-        return True
-
-    query = '''query aa#aa { __typename }'''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Unexpected token "END"'):
-      return True
-
-    query = '''
-      query @skip {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Argument \'if\' cannot be empty, so directive \'skip\' has been ignored'):
-      return True
-
-    query = '''
-      query @doesnotexist {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'No DirectiveResolver resolves directive with name \'doesnotexist\''):
-      return True
-
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'The query in the body is empty'):
-      return True
-
-    return False
-
-  def engine_wpgraphql(self):
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'GraphQL Request must include at least one of those two parameters: "query" or "queryId"'):
-      return True
-
-    query = '''
-     query {
-       alias1$1:__typename
-     }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if not error_contains(response, 'Syntax Error: Expected Name, found $'):
+    if kind == 'msg':
+      return error_contains(resp, arg)
+    if kind == 'nodata_msg':
+      return error_contains(resp, arg) and 'data' not in resp
+    if kind == 'data_msg':
+      return error_contains(resp, arg) and 'data' in resp
+    if kind == 'part':
+      field, sub = arg
+      return error_contains(resp, sub, part=field)
+    if kind == 'typename':
+      return isinstance(data, dict) and data.get('__typename') == arg
+    if kind == 'alias':
+      alias, val = arg
+      return isinstance(data, dict) and data.get(alias) == val
+    if kind == 'field':
+      field, val = arg
+      return isinstance(data, dict) and data.get(field) == val
+    if kind == 'ext_key':
+      ext = resp.get('extensions')
+      return isinstance(ext, dict) and arg in ext
+    if kind == 'ext_code':
+      for err in (resp.get('errors') or []):
+        if isinstance(err, dict):
+          ext = err.get('extensions') or {}
+          if isinstance(ext, dict) and ext.get('code') == arg:
+            return True
       return False
-
-    try:
-      debug_msg = response['extensions']['debug'][0]
-      if debug_msg['type'] == 'DEBUG_LOGS_INACTIVE' or \
-        debug_msg['message'] == 'GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled.':
-        return True
-    except KeyError:
-      pass
-
-    return False
-
-  def engine_gqlgen(self):
-    query = '''
-      query  {
-      __typename {
-    }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'expected at least one definition'):
-      return True
-
-    query = '''
-      query  {
-      alias^_:__typename {
-    }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Expected Name, found <Invalid>'):
-      return True
-
-    return False
-
-  def engine_graphqlgo(self):
-    query = '''
-      query {
-      __typename {
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Unexpected empty IN'):
-      return True
-
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Must provide an operation.'):
-      return True
-
-    query = '''
-      query {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    try:
-      if response['data'] != None and response['data']['__typename'] == 'RootQuery':
-        return True
-    except KeyError:
-      pass
-
-    return False
-
-  def engine_juniper(self):
-    query = '''
-      queryy {
-        __typename
-    }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Unexpected "queryy"'):
-      return True
-
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Unexpected end of input'):
-      return True
-
-    return False
-
-  def engine_sangria(self):
-    query = '''
-      queryy {
-        __typename
-    }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    syntaxError = response.get('syntaxError', '')
-    if 'Syntax error while parsing GraphQL query. Invalid input "queryy", expected ExecutableDefinition or TypeSystemDefinition' in syntaxError:
-      return True
-
-    return False
-
-  def engine_flutter(self):
-    query = '''
-      query {
-        __typename @deprecated
-    }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive "deprecated" may not be used on FIELD.'):
-      return True
-
-    return False
-
-  def engine_dianajl(self):
-    query = '''queryy { __typename }'''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Syntax Error GraphQL request (1:1) Unexpected Name "queryy"'):
-      return True
-
-    return False
-
-  def engine_strawberry(self):
-    query = '''
-      query @deprecated {
-        __typename
-      }'''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive \'@deprecated\' may not be used on query.') and 'data' in response:
-      return True
-
-    return False
-
-  def engine_tartiflette(self):
-    query = '''
-      query @a { __typename }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Unknow Directive < @a >.'):
-      return True
-
-    query = '''
-      query @skip { __typename }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Missing mandatory argument < if > in directive < @skip >.'):
-      return True
-
-    query = '''
-      query { graphwoof }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Field graphwoof doesn\'t exist on Query'):
-      return True
-
-    query = '''
-      query {
-        __typename @deprecated
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Directive < @deprecated > is not used in a valid location.'):
-      return True
-
-    query = '''
-      queryy {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'syntax error, unexpected IDENTIFIER'):
-      return True
-
-    return False
-
-  def engine_tailcall(self):
-    query = '''
-      aa {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'expected executable_definition'):
-      return True
-
-    return False
-
-
-  def engine_dgraph(self):
-    query = '''
-      query {
-        __typename @cascade
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if 'data' in response and response['data']:
-      if response.get('data').get('__typename', '') == 'Query':
-        return True
-
-    query = '''
-      query {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Not resolving __typename. There\'s no GraphQL schema in Dgraph. Use the /admin API to add a GraphQL schema'):
-      return True
-
-    return False
-
-  def engine_directus(self):
-    query = ''
-
-    response = self.graph_query(self.url, payload=query)
-    errors = response.get('errors', [])
-    if response.get('errors', []):
-      if errors and errors[0].get('extensions', {}).get('code' '') == 'INVALID_PAYLOAD':
-        return True
-
-    return False
-
-  def engine_lighthouse(self):
-    query = '''
-      query {
-        __typename @include(if: falsee)
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Internal server error') or error_contains(response, 'internal', part='category'):
-      return True
-
-    return False
-
-  def engine_agoo(self):
-    query = '''
-      query {
-        zzz
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'eval error', part='code'):
-      return True
-
-    return False
-
-  def engine_mercurius(self):
-    query = ''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Unknown query'):
-      return True
-    return False
-
-  def engine_morpheus(self):
-    query = '''
-      queryy {
-          __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'expecting white space') or error_contains(response, 'offset'):
-      return True
-
-    return False
-
-  def engine_lacinia(self):
-    query = '''
-      query {
-        graphw00f
-      }
-    '''
-
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Cannot query field `graphw00f\' on type `QueryRoot\'.'):
-        return True
-
-    return False
-
-  def engine_jaal(self):
-    query = '''{}'''
-    response = self.graph_query(self.url, payload=query, operation='{}')
-
-    if error_contains(response, 'must have a single query') or error_contains(response, 'offset'):
-      return True
-
-    return False
-
-  def engine_caliban(self):
-    query = '''
-      query {
-        __typename
-      }
-
-      fragment woof on __Schema {
-        directives {
-          name
-        }
-      }
-    '''
-
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Fragment \'woof\' is not used in any spread'):
-      return True
-
-    return False
-
-  def engine_absinthe(self):
-    query = '''
-      query {
-        graphw00f
-      }
-    '''
-
-    response = self.graph_query(self.url, payload=query)
-
-    if error_contains(response, 'Cannot query field \"graphw00f\" on type \"RootQueryType\".'):
-        return True
-
-    return False
-
-  def engine_graphqldotnet(self):
-    query = 'query @skip { __typename }'
-    response = self.graph_query(self.url, payload=query)
-    return error_contains(response, 'Directive \'skip\' may not be used on Query.')
-  
-  def engine_pggraphql(self):
-    query = '''query { __typename @skip(aa:true) }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Unknown argument to @skip: aa'):
-      return True
-    
-    return False
-
-  def engine_hotchocolate(self):
-    query = '''
-    queryy  {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Unexpected token: Name.'):
-      return True
-
-    query = '''
-    query @aaa@aaa {
-        __typename
-      }
-    '''
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'The specified directive `aaa` is not supported by the current schema.'):
-      return True
-
-    return False
-  
-  def engine_inigo(self):
-      query = '''
-      query  {
-          __typename
-        }
-      '''
-      response = self.graph_query(self.url, payload=query)
-      if 'extensions' in response and 'inigo' in response['extensions']:
+    if kind == 'ext_field':
+      path, val = arg
+      base = resp.get('extensions')
+      return self._walk(base, path) == val
+    if kind == 'ext_present':
+      # arg = path tuple into top-level response.extensions; True if it resolves to non-None
+      base = resp.get('extensions')
+      return self._walk(base, arg) is not None
+    if kind == 'err_ext_present':
+      # arg = path tuple into any error's .extensions; True if present on any error
+      for err in (resp.get('errors') or []):
+        if isinstance(err, dict) and self._walk(err.get('extensions'), arg) is not None:
           return True
-
       return False
-  
-  def engine_ballerina(self):
-    query = '''
-    query {
-      __typename
-      ...A
-    }
-
-    fragment A on Query {
-      ...B
-    }
-
-    fragment B on Query {
-      ...A
-    }
-    '''
-    
-    response = self.graph_query(self.url, payload=query)
-    if error_contains(response, 'Cannot spread fragment "A" within itself via "B"'):
-        return True
-
+    if kind == 'top':
+      key, sub = arg
+      v = resp.get(key)
+      return isinstance(v, str) and sub.lower() in v.lower()
+    if kind == 'html':
+      txt = resp.get('__html__', '') if isinstance(resp, dict) else ''
+      return isinstance(txt, str) and arg.lower() in txt.lower()
+    if kind == 'federation':
+      return (isinstance(data, dict)
+              and isinstance(data.get('_service'), dict)
+              and isinstance(data['_service'].get('sdl'), str)
+              and len(data['_service']['sdl']) > 0)
+    if kind == 'header':
+      name, sub = arg
+      for k, v in hdrs.items():
+        if k.lower() == name.lower() and sub.lower() in str(v).lower():
+          return True
+      return False
     return False
-  
+
+  @staticmethod
+  def _family_of(engine):
+    for sig in SIGNALS:
+      if sig[0] == engine:
+        return sig[1]
+    return engine
+
+  def detect_engine(self, url, responses=None, headers=None):
+    '''Score every signal and resolve engine + family + confidence.
+
+    Returns a dict:
+      { engine, family, confidence, score, signals, candidates, ambiguous,
+        federation }
+    or None if nothing matched.
+    '''
+    if responses is None or headers is None:
+      responses, headers = self._send_probes(url)
+
+    engine_score = defaultdict(int)
+    engine_hits = defaultdict(list)
+    engine_maxw = defaultdict(int)
+    family_score = defaultdict(int)
+
+    for sig in SIGNALS:
+      if self._match(sig, responses, headers):
+        engine, family, weight = sig[0], sig[1], sig[2]
+        engine_score[engine] += weight
+        engine_hits[engine].append(sig)
+        engine_maxw[engine] = max(engine_maxw[engine], weight)
+        family_score[family] += weight
+
+    federation = any(
+      self._match(('_fed', '_fed', UNIQUE, 'federation', 'federation', None), responses, headers)
+      for _ in (0,)
+    )
+
+    if not engine_score:
+      return None
+
+    # Rank engines: prefer higher max-weight signal, then total score.
+    ranked = sorted(engine_score.items(),
+                    key=lambda kv: (engine_maxw[kv[0]], kv[1]),
+                    reverse=True)
+    best_engine, best_total = ranked[0]
+    best_maxw = engine_maxw[best_engine]
+
+    if best_maxw < STRONG:
+      # Only family/weak evidence -> report the library family, do not
+      # over-claim a specific server.
+      fam = sorted(family_score.items(), key=lambda kv: kv[1], reverse=True)[0][0]
+      engine = FAMILY_FALLBACK.get(fam, best_engine)
+      confidence = 'low'
+    else:
+      engine = best_engine
+      confidence = 'high' if best_maxw >= UNIQUE else 'medium'
+
+    # Ambiguity: any OTHER engine also carrying a >=STRONG signal.
+    runners = [(e, s) for e, s in ranked
+               if e != best_engine and engine_maxw[e] >= STRONG]
+
+    return {
+      'engine': engine,
+      'family': self._family_of(engine),
+      'confidence': confidence,
+      'score': best_total,
+      'signals': engine_hits.get(best_engine, []),
+      'candidates': ranked,
+      'ambiguous': bool(runners),
+      'runners': runners,
+      'federation': federation,
+    }

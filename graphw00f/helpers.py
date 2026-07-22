@@ -95,11 +95,96 @@ def possible_graphql_paths():
 
 def get_engines():
   return {
+    'graphql-js':{
+      'name':'graphql-js (generic / reference server)',
+      'url':'https://github.com/graphql/graphql-js',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['JavaScript', 'Node.js', 'TypeScript'],
+      'note':'Underlying reference library shared by Apollo Server, GraphQL Yoga, express-graphql, graphql-http, Mercurius, Directus and others. Could not narrow to a specific server (no server-unique signal observed).'
+    },
+    'graphql-core':{
+      'name':'graphql-core (generic / Python reference server)',
+      'url':'https://github.com/graphql-python/graphql-core',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['Python'],
+      'note':'Underlying Python reference library shared by Ariadne, Strawberry and Graphene 3. Could not narrow to a specific server (no server-unique signal observed).'
+    },
     'apollo':{
-      'name':'Apollo',
+      'name':'Apollo Server',
       'url':'https://www.apollographql.com',
       'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/apollo.md',
       'technology':['JavaScript', 'Node.js', 'TypeScript']
+    },
+    'apollo-router':{
+      'name':'Apollo Router / Federation Gateway',
+      'url':'https://www.apollographql.com/docs/router',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/apollo.md',
+      'technology':['Rust'],
+      'note':'Federation supergraph gateway. Distinct from Apollo Server: error codes GRAPHQL_PARSING_FAILED / MISSING_QUERY_STRING / CSRF_ERROR.'
+    },
+    'express-graphql':{
+      'name':'express-graphql',
+      'url':'https://github.com/graphql/express-graphql',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['JavaScript', 'Node.js']
+    },
+    'graphql-http':{
+      'name':'graphql-http (reference server)',
+      'url':'https://github.com/graphql/graphql-http',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['JavaScript', 'Node.js', 'TypeScript']
+    },
+    'async-graphql':{
+      'name':'async-graphql',
+      'url':'https://github.com/async-graphql/async-graphql',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['Rust']
+    },
+    'apollo-federation':{
+      'name':'Apollo Federation subgraph',
+      'url':'https://www.apollographql.com/docs/federation',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/apollo.md',
+      'technology':[],
+      'note':'Federation SUBGRAPH: query { _service { sdl } } returns the SDL. Grep the SDL for specs.apollo.dev/federation/v2 to tell v2 from v1. Could be apollo-server+@apollo/subgraph, Saleor, graphql-java, etc.'
+    },
+    'cosmo-router':{
+      'name':'WunderGraph Cosmo Router',
+      'url':'https://cosmo-docs.wundergraph.com',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['Go']
+    },
+    'hive-gateway':{
+      'name':'Hive Gateway (The Guild)',
+      'url':'https://the-guild.dev/graphql/hive/docs/gateway',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['TypeScript', 'Node.js'],
+      'note':'Federation gateway built on GraphQL Yoga — the Yoga tells also fire; the hardcoded landing string disambiguates.'
+    },
+    'postgraphile':{
+      'name':'PostGraphile',
+      'url':'https://www.graphile.org/postgraphile',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['JavaScript', 'Node.js', 'PostgreSQL']
+    },
+    'saleor':{
+      'name':'Saleor',
+      'url':'https://saleor.io',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphene.md',
+      'technology':['Python'],
+      'note':'E-commerce platform on Graphene; always-on extensions.cost.* is the Saleor-specific tell.'
+    },
+    'grafbase':{
+      'name':'Grafbase',
+      'url':'https://grafbase.com',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix',
+      'technology':['Rust']
+    },
+    'graphql-dgs':{
+      'name':'Netflix DGS Framework',
+      'url':'https://netflix.github.io/dgs',
+      'ref':'https://github.com/nicholasaleks/graphql-threat-matrix/blob/master/implementations/graphql-java.md',
+      'technology':['Java', 'Kotlin', 'Spring'],
+      'note':'Built on graphql-java; default GraphQLJavaErrorInstrumentation adds errorType/errorDetail extension keys.'
     },
     'aws-appsync':{
       'name':'AWS AppSync',

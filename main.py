@@ -152,25 +152,47 @@ def main():
             sys.exit(1)
 
     print('[*] Attempting to fingerprint...')
+    fingerprint = None
     result = g.execute(url)
+    detail = g.last_result or {}
+    confidence = detail.get('confidence')
+    family = detail.get('family')
 
     if result:
-      name = get_engines()[result]['name']
-      url = get_engines()[result]['url']
-      ref = get_engines()[result]['ref']
-      technologies = ', '.join(get_engines()[result]['technology'])
+      engines = get_engines()
+      meta = engines.get(result, {'name': result, 'url': '', 'ref': '', 'technology': []})
+      name = meta['name']
+      home = meta.get('url', '')
+      ref = meta.get('ref', '')
+      technologies = ', '.join(meta.get('technology', []))
       fingerprint = name
-      print(bcolors.OKGREEN + '[*] Discovered GraphQL Engine: ({})'.format(name))
+
+      conf_color = {'high': bcolors.OKGREEN, 'medium': bcolors.OKCYAN, 'low': bcolors.WARNING}.get(confidence, bcolors.OKGREEN)
+      print(conf_color + '[*] Discovered GraphQL Engine: ({})'.format(name))
+      if confidence:
+        print('[!] Confidence: {} (family: {}, score: {})'.format(confidence.upper(), family, detail.get('score')))
+      if confidence == 'low':
+        print(bcolors.WARNING + '[i] Only library-family evidence was observed — no server-unique signal. '
+              'Reported as the underlying engine, not a specific server.' + bcolors.ENDC)
+      # Evidence: which probe strings actually fired
+      for sig in detail.get('signals', []):
+        _eng, _fam, _w, _pid, _kind, _arg = sig
+        print('    [+] signal: probe={} kind={} match={!r} (weight {})'.format(_pid, _kind, _arg, _w))
+      if detail.get('federation'):
+        print(bcolors.OKCYAN + '[!] Apollo Federation / supergraph detected (query { _service { sdl } } returned SDL).' + bcolors.ENDC)
+      if detail.get('ambiguous'):
+        runners = ', '.join('{} ({})'.format(e, s) for e, s in detail.get('runners', []))
+        print(bcolors.WARNING + '[i] Ambiguous — other strong candidates: {}'.format(runners) + bcolors.ENDC)
       print('[!] Attack Surface Matrix: {}'.format(ref))
       print('[!] Technologies: {}'.format(technologies))
-      print('[!] Homepage: {}'.format(url))
+      print('[!] Homepage: {}'.format(home))
     else:
       print('[x] Nothing was found :-(')
 
     if options.output_file:
       f = open(options.output_file, 'w')
-      f.write('url,detected_engine,timestamp\n')
-      f.write('{},{},{}\n'.format(url_netloc, fingerprint, get_time()))
+      f.write('url,detected_engine,family,confidence,timestamp\n')
+      f.write('{},{},{},{},{}\n'.format(url_netloc, fingerprint, family or '', confidence or '', get_time()))
       f.close()
     
     print(bcolors.ENDC + '[*] Completed.')
